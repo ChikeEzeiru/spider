@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { Code02 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
+import AsciiGrid from "@/components/ui/AsciiGrid";
 
 export default function Hero() {
   return (
@@ -10,14 +10,7 @@ export default function Hero() {
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 mask-[url(/patterns/hero-fade-mask.svg)] mask-size-[1280px_768px] mask-top mask-no-repeat"
         >
-          <Image
-            src="/patterns/dot-grid.svg"
-            alt=""
-            width={1280}
-            height={1280}
-            loading="eager"
-            className="absolute -top-70 left-1/2 max-w-none -translate-x-1/2"
-          />
+          <AsciiGrid />
         </div>
 
         <div className="relative flex flex-col items-start gap-8">
@@ -37,6 +30,7 @@ export default function Hero() {
               iconTrailing={<Code02 data-icon="trailing" />}
               data-spider-perch
               data-spider-align="0.75"
+              data-ascii-pulse
             >
               Start Building
             </Button>
