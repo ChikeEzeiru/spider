@@ -87,6 +87,8 @@
 
     /* Figma's text/tertiary is a step lighter than Untitled's default. */
     --color-text-tertiary: var(--color-neutral-500);
+    /* Figma "background/sunken": recessed panels, as in the How it works steps. */
+    --background-color-sunken: var(--color-neutral-200);
 
     /* Punch is the accent: brand fills land on punch-600, as in the hero CTA. */
     --color-brand-50: var(--color-punch-50);

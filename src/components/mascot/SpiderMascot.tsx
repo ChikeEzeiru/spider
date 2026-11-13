@@ -22,7 +22,7 @@ import {
 /*
  * Page contract:
  *   data-spider-scene                section the spider visits while it's in view
- *   data-spider-mode="patrol"        hop between the scene's perches instead of staying put
+ *   data-spider-mode="patrol"        hop through the scene's perches in page order, looping
  *   data-spider-perch                element the spider can sit on (top edge)
  *   data-spider-align="0..1"         where along the top edge to sit (default 0.5)
  *   data-spider-on                   set by the mascot on the perch it's sitting on
@@ -116,9 +116,9 @@ export default function SpiderMascot() {
       while (run === generation) {
         await wait(gsap.utils.random(1.4, 2.4));
         if (run !== generation) return;
-        const options = perchesIn(scene).filter((el) => el !== perch);
-        const next = options[Math.floor(gsap.utils.random(0, options.length))];
-        if (!next) return;
+        const perches = perchesIn(scene);
+        const next = perches[(perches.indexOf(perch as HTMLElement) + 1) % perches.length];
+        if (!next || next === perch) return;
         const at = gsap.utils.random(0.25, 0.75);
         sitOn(null);
         await play(hop(m, pointOn(next, at)));
