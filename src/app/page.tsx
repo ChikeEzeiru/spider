@@ -2,7 +2,7 @@ import { Button } from "@/components/base/buttons/button";
 import Header from "@/components/layout/Header";
 import SpiderMascot from "@/components/mascot/SpiderMascot";
 import Hero from "@/components/sections/Hero";
-import HowItWorks from "@/components/sections/HowItWorks";
+import HowItWorks from "@/components/sections/how-it-works/HowItWorks";
 import SpiderIcon from "@/components/ui/SpiderIcon";
 
 export default function Home() {
