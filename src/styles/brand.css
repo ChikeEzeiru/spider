@@ -1,0 +1,96 @@
+/*
+ * Spider brand layer on top of Untitled UI's generated theme.
+ * Palettes come from the "Branding and Inspiration" page of the Figma file.
+ */
+@theme {
+    --font-body: var(--font-dm-sans), -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-display: var(--font-dm-sans), -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+
+    --color-aztec-50: #f9fafa;
+    --color-aztec-100: #f4f5f5;
+    --color-aztec-200: #e4e7e6;
+    --color-aztec-300: #d1d6d4;
+    --color-aztec-400: #9fa7a4;
+    --color-aztec-500: #6d7773;
+    --color-aztec-600: #4f5654;
+    --color-aztec-700: #3d4341;
+    --color-aztec-800: #242926;
+    --color-aztec-900: #1c211f;
+    --color-aztec-950: #090c0b;
+
+    --color-merino-50: #f9f7f3;
+    --color-merino-100: #f2efe6;
+    --color-merino-200: #e1dac7;
+    --color-merino-300: #cec1a3;
+    --color-merino-400: #baa37d;
+    --color-merino-500: #ab8e64;
+    --color-merino-600: #9e7c58;
+    --color-merino-700: #84654a;
+    --color-merino-800: #6b5341;
+    --color-merino-900: #584536;
+    --color-merino-950: #2e231c;
+
+    --color-punch-50: #fef4f2;
+    --color-punch-100: #fde7e3;
+    --color-punch-200: #fdd3cb;
+    --color-punch-300: #fab4a7;
+    --color-punch-400: #f58974;
+    --color-punch-500: #eb6248;
+    --color-punch-600: #d94d32;
+    --color-punch-700: #b53820;
+    --color-punch-800: #96311e;
+    --color-punch-900: #7d2e1f;
+    --color-punch-950: #44140b;
+
+    --color-swamp-green-50: #f5f6ef;
+    --color-swamp-green-100: #e9ecdb;
+    --color-swamp-green-200: #d4dbbb;
+    --color-swamp-green-300: #b2be8a;
+    --color-swamp-green-400: #9dab70;
+    --color-swamp-green-500: #809052;
+    --color-swamp-green-600: #63713f;
+    --color-swamp-green-700: #4d5833;
+    --color-swamp-green-800: #40482c;
+    --color-swamp-green-900: #373e29;
+    --color-swamp-green-950: #1b2013;
+
+    --color-celeste-50: #f9fbf8;
+    --color-celeste-100: #f4f6f3;
+    --color-celeste-200: #e9e8e2;
+    --color-celeste-300: #d7d6cc;
+    --color-celeste-400: #aeac98;
+    --color-celeste-500: #7f7d65;
+    --color-celeste-600: #5b5c49;
+    --color-celeste-700: #484838;
+    --color-celeste-800: #2c2921;
+    --color-celeste-900: #1f1e14;
+    --color-celeste-950: #0e0d07;
+
+    /* Untitled UI's semantic greys (text-primary, border-secondary, bg-tertiary...) read from neutral. */
+    --color-neutral-50: var(--color-aztec-50);
+    --color-neutral-100: var(--color-aztec-100);
+    --color-neutral-200: var(--color-aztec-200);
+    --color-neutral-300: var(--color-aztec-300);
+    --color-neutral-400: var(--color-aztec-400);
+    --color-neutral-500: var(--color-aztec-500);
+    --color-neutral-600: var(--color-aztec-600);
+    --color-neutral-700: var(--color-aztec-700);
+    --color-neutral-800: var(--color-aztec-800);
+    --color-neutral-900: var(--color-aztec-900);
+    --color-neutral-950: var(--color-aztec-950);
+
+    /* The brand is monochrome aztec; solid brand fills sit at the darkest end. */
+    --color-brand-50: var(--color-aztec-50);
+    --color-brand-100: var(--color-aztec-100);
+    --color-brand-200: var(--color-aztec-200);
+    --color-brand-300: var(--color-aztec-300);
+    --color-brand-400: var(--color-aztec-400);
+    --color-brand-500: var(--color-aztec-500);
+    --color-brand-600: var(--color-aztec-600);
+    --color-brand-700: var(--color-aztec-700);
+    --color-brand-800: var(--color-aztec-800);
+    --color-brand-900: var(--color-aztec-900);
+    --color-brand-950: var(--color-aztec-950);
+    --color-bg-brand-solid: var(--color-brand-900);
+    --color-bg-brand-solid_hover: var(--color-brand-950);
+}

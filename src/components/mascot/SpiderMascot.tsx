@@ -235,9 +235,9 @@ export default function SpiderMascot() {
 
   return (
     <div ref={layerRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-40 overflow-hidden">
-      <div ref={threadRef} className="invisible absolute top-0 left-0 h-px w-px origin-top bg-white/50" />
-      <div ref={wrapperRef} className="invisible absolute top-0 left-0 text-white">
-        <SpiderRig eyeColor="black" className="pointer-events-auto block h-auto w-11 cursor-pointer" />
+      <div ref={threadRef} className="invisible absolute top-0 left-0 h-px w-px origin-top bg-fg-primary/40" />
+      <div ref={wrapperRef} className="invisible absolute top-0 left-0 text-fg-primary">
+        <SpiderRig eyeColor="white" className="pointer-events-auto block h-auto w-11 cursor-pointer" />
       </div>
     </div>
   );
