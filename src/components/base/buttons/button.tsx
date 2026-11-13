@@ -63,6 +63,15 @@ export const styles = sortCx({
                 "*:data-icon:text-white/60 hover:*:data-icon:text-white/70",
             ].join(" "),
         },
+        dark: {
+            root: [
+                "bg-aztec-900 text-white shadow-xs-skeuomorphic ring-1 ring-transparent ring-inset hover:bg-aztec-950 data-loading:bg-aztec-950",
+                // Inner border gradient
+                "before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0%",
+                // Icon styles
+                "*:data-icon:text-white/60 hover:*:data-icon:text-white/70",
+            ].join(" "),
+        },
         secondary: {
             root: [
                 "bg-primary text-secondary shadow-xs-skeuomorphic ring-1 ring-primary ring-inset hover:bg-primary_hover hover:text-secondary_hover data-loading:bg-primary_hover",

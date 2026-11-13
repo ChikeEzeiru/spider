@@ -1,7 +1,7 @@
-import { ArrowRight } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import Header from "@/components/layout/Header";
 import SpiderMascot from "@/components/mascot/SpiderMascot";
+import Hero from "@/components/sections/Hero";
 import SpiderIcon from "@/components/ui/SpiderIcon";
 
 const FEATURES = [
@@ -20,25 +20,9 @@ export default function Home() {
     <div className="relative min-h-screen">
       <Header />
 
+      <Hero />
+
       {/* Placeholder content below until the remaining Figma sections arrive. */}
-      <section data-spider-scene className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
-        <h1 className="mb-6 max-w-3xl text-display-lg font-semibold md:text-display-xl">
-          Build faster.
-          <br />
-          Ship smarter.
-        </h1>
-        <p className="mb-10 max-w-lg text-lg text-tertiary">
-          The platform for high-performance web. Deploy, scale, and iterate at the speed of thought.
-        </p>
-        <div className="flex items-center gap-3">
-          <Button data-spider-perch data-spider-align="0.75" size="lg" iconTrailing={<ArrowRight data-icon="trailing" />}>
-            Start for free
-          </Button>
-          <Button size="lg" color="secondary">
-            See how it works
-          </Button>
-        </div>
-      </section>
 
       <section className="border-t border-secondary px-6 py-14">
         <p className="mb-10 text-center text-xs tracking-widest text-quaternary uppercase">Trusted by teams at</p>

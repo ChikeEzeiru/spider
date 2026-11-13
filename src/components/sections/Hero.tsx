@@ -1,0 +1,48 @@
+import Image from "next/image";
+import { Code02 } from "@untitledui/icons";
+import { Button } from "@/components/base/buttons/button";
+
+export default function Hero() {
+  return (
+    <section data-spider-scene className="flex justify-center px-2">
+      <div className="relative flex min-h-180 w-full max-w-320 items-end overflow-hidden border-x border-b border-secondary px-8 py-18">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 mask-[url(/patterns/hero-fade-mask.svg)] mask-size-[1280px_768px] mask-top mask-no-repeat"
+        >
+          <Image
+            src="/patterns/dot-grid.svg"
+            alt=""
+            width={1280}
+            height={1280}
+            loading="eager"
+            className="absolute -top-70 left-1/2 max-w-none -translate-x-1/2"
+          />
+        </div>
+
+        <div className="relative flex flex-col items-start gap-8">
+          <p className="text-md leading-heading tracking-heading text-tertiary">4.5k+ developers build with Spider</p>
+          <h1 className="text-44 tracking-heading text-pretty text-tertiary">
+            <span className="font-medium text-primary">Build full-stack apps without wiring every layer by hand.</span>{" "}
+            Define your app in TypeScript. Spider connects your React interface &amp; Node.js server with built-in
+            auth, typed operations, background jobs, &amp; email.
+          </h1>
+          <div className="flex flex-wrap gap-4">
+            <Button href="#" size="xl" color="secondary">
+              See how it works
+            </Button>
+            <Button
+              href="#"
+              size="xl"
+              iconTrailing={<Code02 data-icon="trailing" />}
+              data-spider-perch
+              data-spider-align="0.75"
+            >
+              Start Building
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

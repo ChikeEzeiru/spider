@@ -6,6 +6,12 @@
     --font-body: var(--font-dm-sans), -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     --font-display: var(--font-dm-sans), -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 
+    /* Figma "font/size/44" with the line height and tracking its text styles use. */
+    --text-44: 2.75rem;
+    --text-44--line-height: 1.15;
+    --leading-heading: 1.15;
+    --tracking-heading: -0.03em;
+
     --color-aztec-50: #f9fafa;
     --color-aztec-100: #f4f5f5;
     --color-aztec-200: #e4e7e6;
@@ -79,18 +85,27 @@
     --color-neutral-900: var(--color-aztec-900);
     --color-neutral-950: var(--color-aztec-950);
 
-    /* The brand is monochrome aztec; solid brand fills sit at the darkest end. */
-    --color-brand-50: var(--color-aztec-50);
-    --color-brand-100: var(--color-aztec-100);
-    --color-brand-200: var(--color-aztec-200);
-    --color-brand-300: var(--color-aztec-300);
-    --color-brand-400: var(--color-aztec-400);
-    --color-brand-500: var(--color-aztec-500);
-    --color-brand-600: var(--color-aztec-600);
-    --color-brand-700: var(--color-aztec-700);
-    --color-brand-800: var(--color-aztec-800);
-    --color-brand-900: var(--color-aztec-900);
-    --color-brand-950: var(--color-aztec-950);
-    --color-bg-brand-solid: var(--color-brand-900);
-    --color-bg-brand-solid_hover: var(--color-brand-950);
+    /* Figma's text/tertiary is a step lighter than Untitled's default. */
+    --color-text-tertiary: var(--color-neutral-500);
+
+    /* Punch is the accent: brand fills land on punch-600, as in the hero CTA. */
+    --color-brand-50: var(--color-punch-50);
+    --color-brand-100: var(--color-punch-100);
+    --color-brand-200: var(--color-punch-200);
+    --color-brand-300: var(--color-punch-300);
+    --color-brand-400: var(--color-punch-400);
+    --color-brand-500: var(--color-punch-500);
+    --color-brand-600: var(--color-punch-600);
+    --color-brand-700: var(--color-punch-700);
+    --color-brand-800: var(--color-punch-800);
+    --color-brand-900: var(--color-punch-900);
+    --color-brand-950: var(--color-punch-950);
+}
+
+@layer base {
+    /* The Figma file pins DM Sans to optical size 14 at every size; browsers would otherwise
+       pick a narrower cut for large text and headings would wrap differently. */
+    html {
+        font-variation-settings: "opsz" 14;
+    }
 }
