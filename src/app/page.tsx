@@ -1,9 +1,10 @@
 import { ArrowRight } from "@untitledui/icons";
+import SpiderMascot from "@/components/mascot/SpiderMascot";
 import SpiderIcon from "@/components/ui/SpiderIcon";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="relative min-h-screen bg-black text-white">
 
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 border-b border-white/10 bg-black/80 backdrop-blur-sm">
@@ -30,7 +31,7 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="flex flex-col items-center justify-center min-h-screen pt-16 px-6 text-center">
+      <section data-spider-scene className="flex flex-col items-center justify-center min-h-screen pt-16 px-6 text-center">
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs text-white/60">
           <span className="size-1.5 rounded-full bg-green-400"></span>
           Now in public beta
@@ -46,19 +47,13 @@ export default function Home() {
         </p>
 
         <div className="flex items-center gap-3">
-          <button className="inline-flex items-center gap-2 bg-white text-black text-sm font-semibold px-6 py-3 rounded-full hover:bg-white/90 transition-colors">
+          <button data-spider-perch data-spider-align="0.75" className="inline-flex items-center gap-2 bg-white text-black text-sm font-semibold px-6 py-3 rounded-full hover:bg-white/90 transition-colors">
             Start for free
             <ArrowRight className="size-4" />
           </button>
           <button className="text-sm text-white/70 border border-white/20 px-6 py-3 rounded-full hover:border-white/40 hover:text-white transition-colors">
             See how it works
           </button>
-        </div>
-
-        {/* Hero glow */}
-        <div className="mt-24 relative w-full max-w-2xl h-64 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full bg-white/5 blur-3xl" />
-          <SpiderIcon size={120} color="white" className="relative z-10 opacity-20" />
         </div>
       </section>
 
@@ -75,7 +70,7 @@ export default function Home() {
       </section>
 
       {/* Feature grid */}
-      <section className="py-24 px-6 max-w-5xl mx-auto">
+      <section data-spider-scene data-spider-mode="patrol" className="py-24 px-6 max-w-5xl mx-auto">
         <p className="text-center text-xs text-white/30 uppercase tracking-widest mb-4">Features</p>
         <h2 className="text-center text-3xl md:text-4xl font-bold tracking-tight mb-16">
           Everything you need to ship
@@ -89,7 +84,11 @@ export default function Home() {
             { title: "Zero-config CI", body: "Automatic builds on every commit. Rollbacks in one click." },
             { title: "Team collaboration", body: "Comments, roles, and access controls for teams of any size." },
           ].map((f) => (
-            <div key={f.title} className="rounded-xl border border-white/10 bg-white/5 p-6 hover:bg-white/8 transition-colors">
+            <div
+              key={f.title}
+              data-spider-perch
+              className="rounded-xl border border-white/10 bg-white/5 p-6 transition-colors duration-300 hover:bg-white/8 data-spider-on:border-white/30 data-spider-on:bg-white/10"
+            >
               <h3 className="text-sm font-semibold mb-2">{f.title}</h3>
               <p className="text-sm text-white/50 leading-relaxed">{f.body}</p>
             </div>
@@ -98,15 +97,14 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="border-t border-white/10 py-24 px-6 text-center">
-        <SpiderIcon size={40} color="white" className="mx-auto mb-8 opacity-60" />
+      <section data-spider-scene className="border-t border-white/10 py-24 px-6 text-center">
         <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
           Ready to build?
         </h2>
         <p className="text-white/50 mb-8 max-w-sm mx-auto text-sm">
           Join thousands of developers who ship faster with Spider.
         </p>
-        <button className="bg-white text-black text-sm font-semibold px-8 py-3 rounded-full hover:bg-white/90 transition-colors">
+        <button data-spider-perch className="bg-white text-black text-sm font-semibold px-8 py-3 rounded-full hover:bg-white/90 transition-colors">
           Get started free
         </button>
       </section>
@@ -124,6 +122,7 @@ export default function Home() {
         </div>
       </footer>
 
+      <SpiderMascot />
     </div>
   );
 }
