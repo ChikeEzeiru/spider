@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { ASCII_PULSE_EVENT, type AsciiPulseDetail } from "./asciiPulse";
 
 /*
  * The hero's dot grid, redrawn as code glyphs that keep rewriting themselves.
  * Ripples ("build pulses") run through it now and then, the pointer stirs it, and any
- * element marked data-ascii-pulse sends a ripple out when hovered.
+ * element marked data-ascii-pulse sends a ripple out when hovered. Other code (the spider
+ * landing on a button) can send one from any point with sendAsciiPulse.
  */
 
 // The Figma dot grid (a 1280px square, centred, shifted up 280px) at twice its density,
@@ -211,8 +213,16 @@ export default function AsciiGrid() {
       pulseAt(point.x, point.y);
     };
 
+    const onPulseRequest = (event: Event) => {
+      if (!visible) return;
+      const { clientX, clientY } = (event as CustomEvent<AsciiPulseDetail>).detail;
+      const point = toCanvas(clientX, clientY);
+      pulseAt(point.x, point.y);
+    };
+
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     document.addEventListener("pointerover", onPulseSourceEnter);
+    document.addEventListener(ASCII_PULSE_EVENT, onPulseRequest);
     start();
 
     return () => {
@@ -221,6 +231,7 @@ export default function AsciiGrid() {
       intersection.disconnect();
       window.removeEventListener("pointermove", onPointerMove);
       document.removeEventListener("pointerover", onPulseSourceEnter);
+      document.removeEventListener(ASCII_PULSE_EVENT, onPulseRequest);
     };
   }, []);
 

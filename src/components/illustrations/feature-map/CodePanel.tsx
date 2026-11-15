@@ -52,7 +52,8 @@ export default function CodePanel({ feature, cycleMs, playing, onSelect }: CodeP
         <span className="text-xs text-aztec-500">{feature.name}</span>
       </div>
 
-      <div className="relative flex-1 overflow-hidden">
+      {/* Fixed to the tallest feature's content when stacked, so the section doesn't resize as focus cycles. */}
+      <div className="relative h-58 overflow-hidden xl:h-auto xl:flex-1">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={feature.name}

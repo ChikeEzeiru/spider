@@ -5,7 +5,7 @@ import AsciiGrid from "@/components/ui/AsciiGrid";
 export default function Cta() {
   return (
     <section data-spider-scene className="flex justify-center px-2">
-      <div className="relative flex w-full max-w-320 flex-col items-start gap-12 overflow-hidden border-x border-b border-secondary px-8 py-20">
+      <div className="relative flex w-full max-w-320 flex-col items-start gap-12 md:gap-14 lg:gap-16 overflow-hidden border-x border-b border-secondary px-8 py-16 md:py-20 lg:py-24">
         {/* The hero's glyph grid, fading out leftwards from the right edge. */}
         <div
           aria-hidden="true"

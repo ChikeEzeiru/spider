@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import { isPulseSourceAt, sendAsciiPulse } from "@/components/ui/asciiPulse";
 import SpiderRig from "./SpiderRig";
 import {
   ascend,
@@ -33,6 +34,7 @@ import {
  *   data-spider-perch                element the spider can sit on (top edge)
  *   data-spider-align="0..1"         where along the top edge to sit (default 0.5)
  *   data-spider-on                   set by the mascot on the perch it's sitting on
+ *   data-ascii-pulse                 landing (or tapping a foot) here sends a ripple through the ASCII grid
  */
 
 const PERCH_SINK = 1;
@@ -50,6 +52,14 @@ export default function SpiderMascot() {
 
     const m = createMascot(wrapper, thread);
     resetPose(m);
+
+    // Feet on a pulse source (the hero and CTA buttons) ripple the ASCII grid from that spot.
+    m.onTouchdown = () => {
+      const box = wrapper.getBoundingClientRect();
+      const footX = box.left + box.width / 2;
+      const footY = box.bottom + PERCH_SINK + 1;
+      if (isPulseSourceAt(footX, footY)) sendAsciiPulse(footX, footY);
+    };
     const stopLife = startLife(m);
     const gaze = createGaze(m);
 
@@ -295,12 +305,15 @@ export default function SpiderMascot() {
       return window.innerHeight * (0.5 + 0.3 * nearEnd);
     };
 
+    // Sections between scenes leave the spider where it is; past the last scene (the footer),
+    // the last scene keeps it, so the CTA still gets the spider at the very bottom of the page.
     const followScroll = () => {
       const line = focusLine();
-      const scene = scenes.find((s) => {
-        const box = s.getBoundingClientRect();
-        return box.top <= line && box.bottom >= line;
-      });
+      const scene =
+        scenes.find((s) => {
+          const box = s.getBoundingClientRect();
+          return box.top <= line && box.bottom >= line;
+        }) ?? (scenes.at(-1)!.getBoundingClientRect().bottom < line ? scenes.at(-1) : undefined);
       if (scene) enterScene(scene);
     };
 

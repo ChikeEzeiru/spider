@@ -9,7 +9,8 @@ import { GITHUB_URL, NAV_LINKS, START_BUILDING_URL } from "./navLinks";
 
 export default function Header() {
   return (
-    <header>
+    // Sticky, above the spider's layer (z-40) so the mascot passes under the nav and never over the open menu.
+    <header className="sticky top-0 z-50 bg-secondary">
       <HeaderBar>
         <div className="flex h-full items-center gap-6 md:p-2">
           <Link href="/" aria-label="Spider home" className="text-primary">

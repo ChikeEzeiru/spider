@@ -6,6 +6,7 @@ import Examples from "@/components/sections/examples/Examples";
 import Features from "@/components/sections/Features";
 import Hero from "@/components/sections/Hero";
 import HowItWorks from "@/components/sections/how-it-works/HowItWorks";
+import Stack from "@/components/sections/Stack";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <Hero />
       <HowItWorks />
       <Features />
+      <Stack />
       <Examples />
       <Cta />
 

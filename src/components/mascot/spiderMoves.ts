@@ -13,6 +13,8 @@ export interface Mascot {
   eyes: SVGGElement;
   eyeballs: SVGElement[];
   legs: SVGGElement[];
+  /** Called the moment the spider's feet (or one tapping foot) hit the surface below. */
+  onTouchdown?: () => void;
 }
 
 type LegPose = "rest" | "splay" | "tuck";
@@ -168,6 +170,7 @@ export function createGaze(m: Mascot) {
 function land(m: Mascot) {
   return gsap
     .timeline()
+    .call(() => m.onTouchdown?.())
     .to(m.svg, { scaleX: 1.14, scaleY: 0.8, duration: 0.07, ease: "power2.in" })
     .to(m.svg, { scaleX: 1, scaleY: 1, duration: 0.5, ease: "elastic.out(1, 0.4)" })
     .add(poseLegs(m, "rest", 0.45, "elastic.out(1, 0.5)"), 0);
@@ -390,7 +393,9 @@ export function fidget(m: Mascot) {
   return gsap
     .timeline()
     .to(leg, { rotation: sideOf(leg) * -20, duration: 0.12, ease: "power2.out", overwrite: "auto" })
-    .to(leg, { rotation: 0, duration: 0.4, ease: "elastic.out(1, 0.5)" });
+    .to(leg, { rotation: 0, duration: 0.4, ease: "elastic.out(1, 0.5)" })
+    // The elastic drop reaches the surface almost at once; that's the tap.
+    .call(() => m.onTouchdown?.(), [], "<0.05");
 }
 
 /** Little excited bounces in place. */
