@@ -12,6 +12,14 @@
     --leading-heading: 1.15;
     --tracking-heading: -0.03em;
 
+    /* The logo's double blink when a page appears: a short pause, then two quick closes. */
+    --animate-blink: blink 1.1s ease-in-out 0.35s both;
+    @keyframes blink {
+        0%, 18%, 34%, 100% { transform: scaleY(1); }
+        9% { transform: scaleY(0.1); }
+        26% { transform: scaleY(0.1); }
+    }
+
     /* A bead travelling along a silk thread; the element supplies its own offset-path. */
     --animate-bead: bead 1.8s ease-in-out infinite;
     @keyframes bead {

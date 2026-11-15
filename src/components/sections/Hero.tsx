@@ -14,11 +14,17 @@ export default function Hero() {
         </div>
 
         <div className="relative flex flex-col items-start gap-8">
-          <p className="text-md leading-heading tracking-heading text-tertiary">4.5k+ developers build with Spider</p>
+          <p className="text-md leading-heading tracking-heading text-tertiary">
+            <span className="font-semibold text-primary">4.5k+</span> developers
+            build with Spider
+          </p>
           <h1 className="text-44 tracking-heading text-pretty text-tertiary">
-            <span className="font-medium text-primary">Build full-stack apps without wiring every layer by hand.</span>{" "}
-            Define your app in TypeScript. Spider connects your React interface &amp; Node.js server with built-in
-            auth, typed operations, background jobs, &amp; email.
+            <span className="font-medium text-primary">
+              Build full-stack apps without wiring every layer by hand.
+            </span>{" "}
+            Define your app in TypeScript. Spider connects your React interface
+            &amp; Node.js server with built-in auth, typed operations,
+            background jobs, &amp; email.
           </h1>
           <div className="flex flex-wrap gap-4">
             <Button href="#" size="xl" color="secondary">

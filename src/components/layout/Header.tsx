@@ -14,7 +14,7 @@ export default function Header() {
       <HeaderBar>
         <div className="flex h-full items-center gap-6 md:p-2">
           <Link href="/" aria-label="Spider home" className="text-primary">
-            <SpiderIcon size={36} />
+            <SpiderIcon size={36} blink />
           </Link>
           <nav aria-label="Main" className="hidden h-full gap-2 p-2 md:flex">
             {NAV_LINKS.map(({ label, href }) => (
