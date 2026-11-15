@@ -1,19 +1,10 @@
-import BuildPanel from "./BuildPanel";
-import ConnectPanel from "./ConnectPanel";
-import DescribePanel from "./DescribePanel";
+import AsciiScene from "@/components/illustrations/AsciiScene";
+import type { SceneName } from "@/components/illustrations/asciiScenes";
 
-const STEPS = [
-  { title: "Describe", body: "Declare routes & the framework features your app uses.", Illustration: DescribePanel },
-  {
-    title: "Connect",
-    body: "Link the spec to your React pages, server operations, & data model.",
-    Illustration: ConnectPanel,
-  },
-  {
-    title: "Build and deploy",
-    body: "Use the framework's build tools, & choose a deployment route.",
-    Illustration: BuildPanel,
-  },
+const STEPS: { title: string; body: string; scene: SceneName }[] = [
+  { title: "Describe", body: "Declare routes & the framework features your app uses.", scene: "cube" },
+  { title: "Connect", body: "Link the spec to your React pages, server operations, & data model.", scene: "connect" },
+  { title: "Build and deploy", body: "Use the framework's build tools, & choose a deployment route.", scene: "globe" },
 ];
 
 export default function HowItWorks() {
@@ -27,10 +18,10 @@ export default function HowItWorks() {
         </h2>
 
         <ol className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {STEPS.map(({ title, body, Illustration }) => (
+          {STEPS.map(({ title, body, scene }) => (
             <li key={title} className="flex flex-col gap-5 p-2">
-              <div data-spider-perch className="h-50 overflow-hidden bg-sunken">
-                <Illustration />
+              <div data-spider-perch className="relative h-50 overflow-hidden bg-sunken">
+                <AsciiScene scene={scene} />
               </div>
               <p className="text-xl leading-heading tracking-heading text-pretty text-tertiary">
                 <span className="text-primary">{title}.</span> {body}
