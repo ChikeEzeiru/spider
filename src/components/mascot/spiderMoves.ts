@@ -305,6 +305,85 @@ export function scuttle(m: Mascot, toX: number) {
     .add(poseLegs(m, "rest", 0.2));
 }
 
+/** A spot on a frame's edge the spider hides behind, and which way is out. */
+export interface Peek {
+  edge: Point;
+  /** Unit vector pointing away from the frame. */
+  out: Point;
+  /** Turns the spider's head along `out`: 0 over a top edge, 180 under a bottom one. */
+  rotation: number;
+}
+
+// Body-centre distance past the edge: peeking shows the eyes and the knees hooked over it.
+const PEEK_OUT = 2;
+const PEEK_HIDDEN = -18;
+
+/** Where the wrapper goes so the body centre sits `distance` along the peek line. */
+function peekPlacement(m: Mascot, { edge, out }: Peek, distance: number) {
+  const origin = m.wrapper.dataset.peekOrigin!.split(" ").map(Number);
+  return {
+    x: edge.x + out.x * distance - origin[0],
+    y: edge.y + out.y * distance - origin[1],
+  };
+}
+
+/** Hides the spider behind an edge, turned to face out over it. */
+export function hideAt(m: Mascot, peek: Peek) {
+  resetPose(m);
+  // Pivot on the body, not the silk attachment point, so flipping under a bottom edge stays put.
+  const wrapperBox = m.wrapper.getBoundingClientRect();
+  const bodyBox = m.body.getBoundingClientRect();
+  const originX = bodyBox.left + bodyBox.width / 2 - wrapperBox.left;
+  const originY = bodyBox.top + bodyBox.height / 2 - wrapperBox.top;
+  m.wrapper.dataset.peekOrigin = `${originX} ${originY}`;
+  gsap.set(m.wrapper, {
+    transformOrigin: `${originX}px ${originY}px`,
+    rotation: peek.rotation,
+    ...peekPlacement(m, peek, PEEK_HIDDEN),
+    autoAlpha: 1,
+  });
+  gsap.set(m.legs, { rotation: (_i: number, leg: Element) => sideOf(leg) * POSE_ANGLE.tuck });
+}
+
+/** Holds a peek pose after a resize. */
+export function placePeek(m: Mascot, peek: Peek, shown: boolean) {
+  gsap.set(m.wrapper, { rotation: peek.rotation, ...peekPlacement(m, peek, shown ? PEEK_OUT : PEEK_HIDDEN) });
+}
+
+/** Creeps up, hooks its legs over the edge and has a look around. */
+export function peekOut(m: Mascot, peek: Peek) {
+  const tilt = random(8, 14) * (Math.random() < 0.5 ? -1 : 1);
+  return gsap
+    .timeline()
+    .to(m.wrapper, { ...peekPlacement(m, peek, PEEK_OUT - 5), duration: 0.5, ease: "power1.inOut" })
+    .to(m.wrapper, { ...peekPlacement(m, peek, PEEK_OUT), duration: 0.35, ease: "back.out(2.5)" }, ">0.35")
+    .add(poseLegs(m, "splay", 0.3, "back.out(2)"), "<")
+    .add(blink(m), ">0.4")
+    .to(m.svg, { rotation: tilt, duration: 0.35, ease: "power2.inOut" }, ">0.5")
+    .to(m.svg, { rotation: -tilt * 0.6, duration: 0.45, ease: "power2.inOut" }, ">0.8")
+    .to(m.svg, { rotation: 0, duration: 0.3, ease: "power2.out" }, ">0.6");
+}
+
+/** Ducks back behind the edge; quick when startled. */
+export function peekIn(m: Mascot, peek: Peek, quick = false) {
+  return gsap
+    .timeline()
+    .to(m.svg, { rotation: 0, duration: 0.1 })
+    .add(poseLegs(m, "tuck", 0.12), 0)
+    .to(
+      m.wrapper,
+      { ...peekPlacement(m, peek, PEEK_HIDDEN), duration: quick ? 0.16 : 0.45, ease: quick ? "power3.in" : "power2.in" },
+      0,
+    );
+}
+
+/** Steps out of peeking for good: back to the silk-hanging pivot, out of sight. */
+export function clearPeek(m: Mascot) {
+  delete m.wrapper.dataset.peekOrigin;
+  gsap.set(m.wrapper, { autoAlpha: 0, transformOrigin: `50% ${ATTACH_Y}px` });
+  resetPose(m);
+}
+
 /** One leg taps the air. */
 export function fidget(m: Mascot) {
   const leg = m.legs[Math.floor(random(0, m.legs.length))];

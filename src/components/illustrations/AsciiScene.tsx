@@ -15,10 +15,12 @@ const SETTLED_TIME = 6;
 interface AsciiSceneProps {
   scene: SceneName;
   className?: string;
+  /** Glyph colour; accents always use the brand colour. */
+  toneClassName?: string;
 }
 
 /** Renders a scene as a field of code glyphs, shaded with the ramp " .:-=+*#%@". */
-export default function AsciiScene({ scene, className }: AsciiSceneProps) {
+export default function AsciiScene({ scene, className, toneClassName = "text-aztec-600" }: AsciiSceneProps) {
   const accentRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -119,7 +121,7 @@ export default function AsciiScene({ scene, className }: AsciiSceneProps) {
 
   return (
     <div ref={accentRef} aria-hidden="true" className={cx("absolute inset-0 text-brand-500", className)}>
-      <canvas ref={canvasRef} className="size-full font-mono text-aztec-600" />
+      <canvas ref={canvasRef} className={cx("size-full font-mono", toneClassName)} />
     </div>
   );
 }

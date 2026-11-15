@@ -5,17 +5,23 @@ import gsap from "gsap";
 import SpiderRig from "./SpiderRig";
 import {
   ascend,
+  clearPeek,
   createGaze,
   createMascot,
   descend,
   excite,
   fidget,
+  hideAt,
   hop,
+  peekIn,
+  peekOut,
+  placePeek,
   position,
   resetPose,
   scuttle,
   startLife,
   startle,
+  type Peek,
   type Point,
 } from "./spiderMoves";
 
@@ -23,6 +29,7 @@ import {
  * Page contract:
  *   data-spider-scene                section the spider visits while it's in view
  *   data-spider-mode="patrol"        hop through the scene's perches in page order, looping
+ *   data-spider-mode="peek"          hide behind the scene's [data-spider-peek] frame and peek over its edges near the corners
  *   data-spider-perch                element the spider can sit on (top edge)
  *   data-spider-align="0..1"         where along the top edge to sit (default 0.5)
  *   data-spider-on                   set by the mascot on the perch it's sitting on
@@ -53,6 +60,11 @@ export default function SpiderMascot() {
     let perch: HTMLElement | null = null;
     let align = 0.5;
     let visible = false;
+    // While peeking: the frame being hidden behind, which corner, and whether the head is out.
+    let peekFrame: HTMLElement | null = null;
+    let peekCorner = 0;
+    let peekShown = false;
+    let peek: Peek | null = null;
 
     const alignOf = (el: HTMLElement) => Number(el.dataset.spiderAlign ?? 0.5);
     const perchesIn = (scene: HTMLElement) =>
@@ -95,8 +107,72 @@ export default function SpiderMascot() {
       generation += 1;
       current?.kill();
       current = null;
-      resetPose(m);
+      // A peeking spider keeps its turned pose; resetting it would snap it out of the corner.
+      if (!peek) resetPose(m);
       return generation;
+    };
+
+    // Peek spots clockwise from the top left: over the top edge, or upside down under the bottom one.
+    const CORNERS = [
+      { at: [0, 0], out: -1, rotation: 0 },
+      { at: [1, 0], out: -1, rotation: 0 },
+      { at: [1, 1], out: 1, rotation: 180 },
+      { at: [0, 1], out: 1, rotation: 180 },
+    ] as const;
+    const CORNER_INSET = 56;
+
+    const peekAt = (frame: HTMLElement, index: number): Peek => {
+      const layerBox = layer.getBoundingClientRect();
+      const box = frame.getBoundingClientRect();
+      const { at, out, rotation } = CORNERS[index];
+      const inset = at[0] === 0 ? CORNER_INSET : -CORNER_INSET;
+      return {
+        edge: { x: box.left - layerBox.left + box.width * at[0] + inset, y: box.top - layerBox.top + box.height * at[1] },
+        out: { x: 0, y: out },
+        rotation,
+      };
+    };
+
+    // Clip the layer around the frame so whatever is behind it stays hidden.
+    const clipAround = (frame: HTMLElement | null) => {
+      if (!frame) {
+        layer.style.clipPath = "";
+        return;
+      }
+      const layerBox = layer.getBoundingClientRect();
+      const box = frame.getBoundingClientRect();
+      const [x1, y1] = [box.left - layerBox.left, box.top - layerBox.top];
+      const [x2, y2] = [x1 + box.width, y1 + box.height];
+      layer.style.clipPath = `polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, ${x1}px ${y1}px, ${x2}px ${y1}px, ${x2}px ${y2}px, ${x1}px ${y2}px, ${x1}px ${y1}px)`;
+    };
+
+    const stopPeeking = () => {
+      peek = null;
+      peekFrame = null;
+      peekShown = false;
+      clipAround(null);
+      clearPeek(m);
+      visible = false;
+    };
+
+    const peekAround = async (run: number, frame: HTMLElement) => {
+      peekFrame = frame;
+      while (run === generation) {
+        peekCorner = (peekCorner + 1 + Math.floor(gsap.utils.random(0, 3))) % CORNERS.length;
+        peek = peekAt(frame, peekCorner);
+        clipAround(frame);
+        hideAt(m, peek);
+        visible = true;
+        await wait(gsap.utils.random(0.6, 1.4));
+        if (run !== generation) return;
+        peekShown = true;
+        await play(peekOut(m, peek), true);
+        if (run !== generation) return;
+        await wait(gsap.utils.random(1.2, 2.4));
+        if (run !== generation) return;
+        await play(peekIn(m, peek));
+        peekShown = false;
+      }
     };
 
     const idle = async (run: number) => {
@@ -128,7 +204,9 @@ export default function SpiderMascot() {
     };
 
     const carryOn = (run: number) => {
-      if (activeScene?.dataset.spiderMode === "patrol") patrol(run, activeScene);
+      const frame = activeScene?.querySelector<HTMLElement>("[data-spider-peek]");
+      if (activeScene?.dataset.spiderMode === "peek" && frame) peekAround(run, frame);
+      else if (activeScene?.dataset.spiderMode === "patrol") patrol(run, activeScene);
       else idle(run);
     };
 
@@ -137,12 +215,20 @@ export default function SpiderMascot() {
       activeScene = scene;
       const run = interrupt();
 
-      if (visible) {
+      if (peek) {
+        if (peekShown) await play(peekIn(m, peek, true));
+        stopPeeking();
+      } else if (visible) {
         await play(ascend(m));
         visible = false;
       }
       if (run !== generation) return;
       sitOn(null);
+
+      if (scene.dataset.spiderMode === "peek") {
+        carryOn(run);
+        return;
+      }
 
       const target = perchesIn(scene)[0];
       if (!target) return;
@@ -158,6 +244,14 @@ export default function SpiderMascot() {
     };
 
     const onPoke = async () => {
+      if (peek && peekShown && !isBusy()) {
+        // Startled: duck back in, then try another corner.
+        const run = interrupt();
+        await play(peekIn(m, peek, true));
+        peekShown = false;
+        if (run === generation) carryOn(run);
+        return;
+      }
       if (!perch || isBusy()) return;
       const run = interrupt();
       const { x } = position(m);
@@ -180,6 +274,12 @@ export default function SpiderMascot() {
     };
 
     const settle = () => {
+      if (peekFrame && peek) {
+        peek = peekAt(peekFrame, peekCorner);
+        clipAround(peekFrame);
+        if (!current?.isActive()) placePeek(m, peek, peekShown);
+        return;
+      }
       if (perch && !current?.isActive()) gsap.set(wrapper, pointOn(perch, align));
     };
 
@@ -223,6 +323,7 @@ export default function SpiderMascot() {
 
     return () => {
       interrupt();
+      stopPeeking();
       sitOn(null);
       stopLife();
       window.removeEventListener("scroll", followScroll);

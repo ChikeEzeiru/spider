@@ -159,5 +159,19 @@ export const globeScene: Shade = (u, v, t) => {
   return 0.1 + light * 0.7 + graticule;
 };
 
-export const SCENES = { cube: cubeScene, connect: connectScene, globe: globeScene } satisfies Record<string, Shade>;
+/** A faint orb web anchored off the top left, its spiral drifting outwards: a backdrop, not a subject. */
+export const webScene: Shade = (u, v, t) => {
+  const x = u + 2.4;
+  const y = v + 1.3;
+  const r = Math.hypot(x, y);
+  const angle = Math.atan2(y, x);
+  const fade = clamp01(1 - r / 6.5);
+  const shimmer = 0.5 + 0.5 * Math.sin(u * 2.6 + v * 1.7 + t * 0.7);
+  const onSpoke = (r * Math.abs(Math.sin(angle * 8))) / 8 < 0.035;
+  const onSpiral = Math.abs(Math.sin(r * 2.6 - angle * 0.4 - t * 0.3)) < 0.1;
+  if (onSpoke || onSpiral) return (0.2 + 0.1 * shimmer) * fade;
+  return 0.05 * shimmer * fade;
+};
+
+export const SCENES = { cube: cubeScene, connect: connectScene, globe: globeScene, web: webScene } satisfies Record<string, Shade>;
 export type SceneName = keyof typeof SCENES;
