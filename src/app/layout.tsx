@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${dmSans.variable} h-full`}>
-      <body className="flex min-h-full flex-col bg-tertiary text-primary">{children}</body>
+      <body className="flex min-h-full flex-col bg-secondary text-primary">{children}</body>
     </html>
   );
 }

@@ -28,7 +28,7 @@ export default function ExampleList() {
               <span className="flex-1 py-1.5 text-xl leading-heading tracking-heading text-pretty text-tertiary sm:text-display-xs">
                 <span className="text-primary">{name}.</span> {pitch}
               </span>
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-sm text-fg-quaternary transition-colors group-hover:bg-secondary group-hover:text-fg-secondary group-focus-visible:bg-secondary">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-sm text-fg-quaternary transition-colors group-hover:bg-tertiary group-hover:text-fg-secondary group-focus-visible:bg-tertiary">
                 <Plus className={cx("size-5 transition-transform duration-300", isOpen && "rotate-45")} />
               </span>
             </button>
@@ -49,7 +49,7 @@ export default function ExampleList() {
                       <p className="text-md text-tertiary">{summary}</p>
                       <ul className="flex flex-wrap gap-2">
                         {features.map((feature) => (
-                          <li key={feature} className="rounded-sm bg-secondary px-2 py-0.5 text-xs text-secondary">
+                          <li key={feature} className="rounded-sm bg-tertiary px-2 py-0.5 text-xs text-secondary">
                             {feature}
                           </li>
                         ))}

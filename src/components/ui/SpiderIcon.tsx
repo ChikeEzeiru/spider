@@ -16,6 +16,6 @@ interface SpiderIconProps {
 
 export default function SpiderIcon({ size = 36, variant = "dark", className }: SpiderIconProps) {
   return (
-    <Image src={SOURCES[variant]} alt="Spider logo" width={size} height={size} unoptimized className={className} />
+    <Image src={SOURCES[variant]} alt="Spider logo" width={size} height={size} loading="eager" unoptimized className={className} />
   );
 }

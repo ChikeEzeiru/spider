@@ -79,7 +79,7 @@ export default function MobileMenu() {
         inert={!open}
         // Opening shows the panel at once so focus can land in it; closing fades before hiding.
         className={cx(
-          "fixed inset-0 z-50 flex flex-col bg-tertiary duration-250 ease-in-out",
+          "fixed inset-0 z-50 flex flex-col bg-secondary duration-250 ease-in-out",
           open ? "visible opacity-100 transition-opacity" : "invisible opacity-0 transition-all",
         )}
       >
