@@ -16,7 +16,6 @@ import {
   hop,
   peekIn,
   peekOut,
-  placePeek,
   position,
   resetPose,
   scuttle,
@@ -186,9 +185,9 @@ export default function SpiderMascot() {
     };
 
     const idle = async (run: number) => {
-      while (run === generation && perch) {
+      while (run === generation && perch && !peek) {
         await wait(gsap.utils.random(1.8, 3.6));
-        if (run !== generation || !perch) return;
+        if (run !== generation || !perch || peek) return;
         if (Math.random() < 0.5) {
           await play(fidget(m), true);
         } else {
@@ -283,18 +282,55 @@ export default function SpiderMascot() {
       if (event.currentTarget === perch && !current?.isActive()) play(excite(m), true);
     };
 
-    const settle = () => {
-      if (peekFrame && peek) {
-        peek = peekAt(peekFrame, peekCorner);
-        clipAround(peekFrame);
-        if (!current?.isActive()) placePeek(m, peek, peekShown);
+    // Moves measure their targets when they start, so a layout change (a window resize, content above
+    // growing, fonts arriving) can strand the spider. Rather than snapping it across the screen, it climbs
+    // away and drops back in, just as it does when the reader scrolls to a section.
+    const relayout = async () => {
+      if (reducedMotion) {
+        if (perch) gsap.set(wrapper, pointOn(perch, align));
         return;
       }
-      if (perch && !current?.isActive()) gsap.set(wrapper, pointOn(perch, align));
+      const scene = activeScene;
+      if (!scene) return;
+
+      if (peek && peekFrame) {
+        const frame = peekFrame;
+        const run = interrupt();
+        if (peekShown) await play(peekIn(m, peek, true));
+        if (run !== generation) return;
+        peekShown = false;
+        clipAround(frame);
+        carryOn(run);
+        return;
+      }
+
+      // Still on its perch's top edge (fidgets and shuffles included): nothing moved under it.
+      if (perch && (!current?.isActive() || currentIsIdle)) {
+        const { x, y } = position(m);
+        const along = alignAt(perch, x);
+        if (Math.abs(pointOn(perch, 0).y - y) < 2 && along >= 0 && along <= 1) return;
+      }
+
+      activeScene = null;
+      enterScene(scene);
     };
+
+    // One relayout per burst of changes, and only when the page's size actually changed.
+    let relayoutTimer = 0;
+    let pageSize = "";
+    const pageResize = new ResizeObserver(([entry]) => {
+      const size = `${Math.round(entry.contentRect.width)}x${Math.round(entry.contentRect.height)}`;
+      if (size === pageSize) return;
+      const first = !pageSize;
+      pageSize = size;
+      if (first) return;
+      window.clearTimeout(relayoutTimer);
+      relayoutTimer = window.setTimeout(relayout, 150);
+    });
 
     const perches = Array.from(document.querySelectorAll<HTMLElement>("[data-spider-perch]"));
     const scenes = Array.from(document.querySelectorAll<HTMLElement>("[data-spider-scene]"));
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // The scene under this line gets the spider. The line slides down as the page
     // bottoms out, so a short last section can still win.
@@ -317,11 +353,9 @@ export default function SpiderMascot() {
       if (scene) enterScene(scene);
     };
 
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
     window.addEventListener("pointermove", onPointerMove);
-    window.addEventListener("resize", settle);
-    document.fonts.ready.then(settle);
+    pageResize.observe(document.body);
+    document.fonts.ready.then(relayout);
     m.svg.addEventListener("click", onPoke);
     perches.forEach((el) => el.addEventListener("pointerenter", onPerchEnter));
 
@@ -341,7 +375,8 @@ export default function SpiderMascot() {
       stopLife();
       window.removeEventListener("scroll", followScroll);
       window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("resize", settle);
+      pageResize.disconnect();
+      window.clearTimeout(relayoutTimer);
       m.svg.removeEventListener("click", onPoke);
       perches.forEach((el) => el.removeEventListener("pointerenter", onPerchEnter));
     };

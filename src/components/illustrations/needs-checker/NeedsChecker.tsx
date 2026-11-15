@@ -35,13 +35,13 @@ export default function NeedsChecker() {
                 aria-pressed={on}
                 onClick={() => toggle(id)}
                 className={cx(
-                  "flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs transition-colors outline-none focus-visible:border-aztec-300",
+                  "flex cursor-pointer items-center gap-1.5 rounded-sm border px-3 py-1.5 text-xs transition-colors outline-none focus-visible:border-aztec-300",
                   on
-                    ? "border-aztec-400 bg-aztec-800 text-aztec-50"
+                    ? "border-brand-400 bg-aztec-800 text-aztec-50"
                     : "border-aztec-800 bg-aztec-900 text-aztec-400 hover:border-aztec-600 hover:text-aztec-200",
                 )}
               >
-                {on && <Check className="size-3.5" />}
+                {on && <Check className="size-3.5 text-brand-400" />}
                 {label}
               </button>
             );

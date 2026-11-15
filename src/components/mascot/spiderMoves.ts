@@ -332,6 +332,8 @@ function peekPlacement(m: Mascot, { edge, out }: Peek, distance: number) {
 
 /** Hides the spider behind an edge, turned to face out over it. */
 export function hideAt(m: Mascot, peek: Peek) {
+  // Nothing from an earlier corner may keep animating the spider once it hides at this one.
+  gsap.killTweensOf(m.wrapper);
   resetPose(m);
   // Pivot on the body, not the silk attachment point, so flipping under a bottom edge stays put.
   const wrapperBox = m.wrapper.getBoundingClientRect();
@@ -348,18 +350,14 @@ export function hideAt(m: Mascot, peek: Peek) {
   gsap.set(m.legs, { rotation: (_i: number, leg: Element) => sideOf(leg) * POSE_ANGLE.tuck });
 }
 
-/** Holds a peek pose after a resize. */
-export function placePeek(m: Mascot, peek: Peek, shown: boolean) {
-  gsap.set(m.wrapper, { rotation: peek.rotation, ...peekPlacement(m, peek, shown ? PEEK_OUT : PEEK_HIDDEN) });
-}
-
 /** Creeps up, hooks its legs over the edge and has a look around. */
 export function peekOut(m: Mascot, peek: Peek) {
   const tilt = random(8, 14) * (Math.random() < 0.5 ? -1 : 1);
   return gsap
     .timeline()
-    .to(m.wrapper, { ...peekPlacement(m, peek, PEEK_OUT - 5), duration: 0.5, ease: "power1.inOut" })
-    .to(m.wrapper, { ...peekPlacement(m, peek, PEEK_OUT), duration: 0.35, ease: "back.out(2.5)" }, ">0.35")
+    // Only ever up and down: the corner fixes x, so a peek can't slide across the frame.
+    .to(m.wrapper, { y: peekPlacement(m, peek, PEEK_OUT - 5).y, duration: 0.5, ease: "power1.inOut" })
+    .to(m.wrapper, { y: peekPlacement(m, peek, PEEK_OUT).y, duration: 0.35, ease: "back.out(2.5)" }, ">0.35")
     .add(poseLegs(m, "splay", 0.3, "back.out(2)"), "<")
     .add(blink(m), ">0.4")
     .to(m.svg, { rotation: tilt, duration: 0.35, ease: "power2.inOut" }, ">0.5")
@@ -375,7 +373,7 @@ export function peekIn(m: Mascot, peek: Peek, quick = false) {
     .add(poseLegs(m, "tuck", 0.12), 0)
     .to(
       m.wrapper,
-      { ...peekPlacement(m, peek, PEEK_HIDDEN), duration: quick ? 0.16 : 0.45, ease: quick ? "power3.in" : "power2.in" },
+      { y: peekPlacement(m, peek, PEEK_HIDDEN).y, duration: quick ? 0.16 : 0.45, ease: quick ? "power3.in" : "power2.in" },
       0,
     );
 }
