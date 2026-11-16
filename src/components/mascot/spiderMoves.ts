@@ -39,6 +39,8 @@ const MIN_SWING_RADIUS = 40;
 const MAX_SWING_RADIUS = 220;
 const SETTLE_TIME = 2;
 const FALL_TIME = 0.24;
+/** Walking pace in px/s: a calm stroll, never a dart. */
+const WALK_SPEED = 45;
 const MAX_STEP = 1 / 120;
 
 const { clamp, random } = gsap.utils;
@@ -180,7 +182,7 @@ export function hop(m: Mascot, to: Point) {
   const from = position(m);
   const dx = to.x - from.x;
   const distance = Math.hypot(dx, to.y - from.y);
-  const duration = clamp(0.32, 0.8, 0.3 + distance / 1500);
+  const duration = clamp(0.5, 1.1, 0.45 + distance / 1200);
   const half = duration / 2;
   const peak = Math.min(from.y, to.y) - Math.min(160, 28 + distance * 0.3);
 
@@ -282,11 +284,14 @@ export function ascend(m: Mascot) {
     .set(m.thread, { autoAlpha: 0 });
 }
 
-/** Walks sideways along a ledge with an alternating-tripod gait. */
+/**
+ * Strolls sideways along a ledge with an alternating-tripod gait. Kept deliberately
+ * unhurried: fast, flickering legs are what make real spiders startling.
+ */
 export function scuttle(m: Mascot, toX: number) {
   const distance = Math.abs(toX - position(m).x);
-  const duration = clamp(0.25, 0.9, distance / 120);
-  const stepDuration = 0.07;
+  const duration = clamp(0.7, 2.6, distance / WALK_SPEED);
+  const stepDuration = 0.16;
   const tripodA = m.legs.filter((leg) => leg.dataset.tripod === "a");
   const tripodB = m.legs.filter((leg) => leg.dataset.tripod === "b");
   const swing = (angle: number) => (_i: number, leg: Element) => sideOf(leg) * angle;
@@ -296,10 +301,10 @@ export function scuttle(m: Mascot, toX: number) {
       repeat: Math.ceil(duration / (stepDuration * 2)) - 1,
       defaults: { duration: stepDuration, ease: "sine.inOut", overwrite: "auto" },
     })
-    .to(tripodA, { rotation: swing(12) })
-    .to(tripodB, { rotation: swing(-12) }, "<")
-    .to(tripodA, { rotation: swing(-12) })
-    .to(tripodB, { rotation: swing(12) }, "<");
+    .to(tripodA, { rotation: swing(8) })
+    .to(tripodB, { rotation: swing(-8) }, "<")
+    .to(tripodA, { rotation: swing(-8) })
+    .to(tripodB, { rotation: swing(8) }, "<");
 
   return gsap
     .timeline()
