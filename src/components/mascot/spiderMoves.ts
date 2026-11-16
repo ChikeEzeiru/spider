@@ -40,7 +40,7 @@ const MAX_SWING_RADIUS = 220;
 const SETTLE_TIME = 2;
 const FALL_TIME = 0.24;
 /** Walking pace in px/s: a calm stroll, never a dart. */
-const WALK_SPEED = 45;
+const WALK_SPEED = 72;
 const MAX_STEP = 1 / 120;
 
 const { clamp, random } = gsap.utils;
@@ -290,7 +290,7 @@ export function ascend(m: Mascot) {
  */
 export function scuttle(m: Mascot, toX: number) {
   const distance = Math.abs(toX - position(m).x);
-  const duration = clamp(0.7, 2.6, distance / WALK_SPEED);
+  const duration = clamp(0.4, 4, distance / WALK_SPEED);
   const stepDuration = 0.16;
   const tripodA = m.legs.filter((leg) => leg.dataset.tripod === "a");
   const tripodB = m.legs.filter((leg) => leg.dataset.tripod === "b");
