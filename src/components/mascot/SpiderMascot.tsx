@@ -94,6 +94,20 @@ export default function SpiderMascot() {
       return (x + wrapper.offsetWidth / 2 - left) / box.width;
     };
 
+    // Standing on its perch's top edge, feet within its width.
+    const isOnPerch = () => {
+      if (!perch) return false;
+      const { x, y } = position(m);
+      const along = alignAt(perch, x);
+      return Math.abs(pointOn(perch, 0).y - y) < 2 && along >= 0 && along <= 1;
+    };
+
+    // A spot to stroll to, far enough from the ends that no leg hangs over the edge.
+    const strollSpot = (el: HTMLElement) => {
+      const margin = (wrapper.offsetWidth / 2 + 8) / el.getBoundingClientRect().width;
+      return gsap.utils.random(Math.min(0.5, Math.max(0.2, margin)), Math.max(0.5, Math.min(0.8, 1 - margin)));
+    };
+
     const sitOn = (el: HTMLElement | null, at = 0.5) => {
       perch?.removeAttribute("data-spider-on");
       perch = el;
@@ -188,11 +202,25 @@ export default function SpiderMascot() {
       while (run === generation && perch && !peek) {
         await wait(gsap.utils.random(1.8, 3.6));
         if (run !== generation || !perch || peek) return;
+        // Mid-bounce from a hover: let it finish and try again later.
+        if (current?.isActive()) continue;
+        // Something shifted the page under it: climb away and come back rather than walk on air.
+        if (!isOnPerch()) {
+          reenter();
+          return;
+        }
         if (Math.random() < 0.5) {
           await play(fidget(m), true);
         } else {
-          align = gsap.utils.random(0.2, 0.8);
-          await play(scuttle(m, pointOn(perch, align).x), true);
+          align = strollSpot(perch);
+          const ledge = pointOn(perch, 0);
+          const walk = scuttle(m, pointOn(perch, align).x);
+          // The ledge moved mid-stroll (content above it opened or closed): stop and re-enter.
+          walk.eventCallback("onUpdate", () => {
+            const now = perch && pointOn(perch, 0);
+            if (!now || Math.abs(now.y - ledge.y) >= 2 || Math.abs(now.x - ledge.x) >= 2) reenter();
+          });
+          await play(walk, true);
         }
       }
     };
@@ -305,15 +333,17 @@ export default function SpiderMascot() {
       }
 
       // Still on its perch's top edge (fidgets and shuffles included): nothing moved under it.
-      if (perch && (!current?.isActive() || currentIsIdle)) {
-        const { x, y } = position(m);
-        const along = alignAt(perch, x);
-        if (Math.abs(pointOn(perch, 0).y - y) < 2 && along >= 0 && along <= 1) return;
-      }
+      if ((!current?.isActive() || currentIsIdle) && isOnPerch()) return;
+      reenter();
+    };
 
+    // Climb out and drop back into the current scene, measuring everything afresh.
+    function reenter() {
+      const scene = activeScene;
+      if (!scene) return;
       activeScene = null;
       enterScene(scene);
-    };
+    }
 
     // One relayout per burst of changes, and only when the page's size actually changed.
     let relayoutTimer = 0;

@@ -290,15 +290,17 @@ export function ascend(m: Mascot) {
  */
 export function scuttle(m: Mascot, toX: number) {
   const distance = Math.abs(toX - position(m).x);
-  const duration = clamp(0.4, 4, distance / WALK_SPEED);
   const stepDuration = 0.16;
+  // A whole number of strides, so the legs stop the moment the body does.
+  const strides = Math.max(1, Math.round(distance / WALK_SPEED / (stepDuration * 2)));
+  const duration = strides * stepDuration * 2;
   const tripodA = m.legs.filter((leg) => leg.dataset.tripod === "a");
   const tripodB = m.legs.filter((leg) => leg.dataset.tripod === "b");
   const swing = (angle: number) => (_i: number, leg: Element) => sideOf(leg) * angle;
 
   const gait = gsap
     .timeline({
-      repeat: Math.ceil(duration / (stepDuration * 2)) - 1,
+      repeat: strides - 1,
       defaults: { duration: stepDuration, ease: "sine.inOut", overwrite: "auto" },
     })
     .to(tripodA, { rotation: swing(8) })
@@ -310,7 +312,7 @@ export function scuttle(m: Mascot, toX: number) {
     .timeline()
     .add(gait, 0)
     .to(m.wrapper, { x: toX, duration, ease: "power1.inOut" }, 0)
-    .add(poseLegs(m, "rest", 0.2));
+    .add(poseLegs(m, "rest", 0.2), duration);
 }
 
 /** A spot on a frame's edge the spider hides behind, and which way is out. */
