@@ -5,7 +5,7 @@ import AsciiGrid from "@/components/ui/AsciiGrid";
 export default function Hero() {
   return (
     <section data-spider-scene className="flex justify-center px-2">
-      <div className="relative flex min-h-[70dvh] w-full max-w-320 items-end overflow-hidden border-x border-b border-secondary px-4 sm:px-6 lg:px-8 py-16 md:py-20 lg:py-24">
+      <div className="relative flex min-h-[70dvh] w-full max-w-320 items-end overflow-hidden border-x border-b border-secondary px-4 sm:px-6 lg:px-8 py-12 sm:py-18 lg:py-24">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 mask-[url(/patterns/hero-fade-mask.svg)] mask-size-[1280px_768px] mask-top mask-no-repeat"
