@@ -27,7 +27,7 @@ export default function ExampleList() {
                 aria-expanded={isOpen}
                 aria-controls={panelId}
                 onClick={() => setOpen(i)}
-                className="flex-1 cursor-pointer py-1.5 text-left text-xl leading-heading tracking-heading text-pretty text-tertiary outline-none sm:text-display-xs"
+                className="flex-1 cursor-pointer py-1.5 text-left text-heading-row leading-heading tracking-heading text-pretty text-tertiary outline-none"
               >
                 <span className="text-primary">{name}.</span> {pitch}
               </button>

@@ -120,6 +120,44 @@
     --color-brand-950: var(--color-punch-950);
 }
 
+/*
+ * Headings step down in three tiers (mobile, sm, lg) rather than scaling fluidly; the
+ * biggest text drops the most. Body copy stays at 16px everywhere.
+ * An explicit leading-* class still wins over the default line height.
+ */
+@utility text-heading-hero {
+    font-size: 2rem;
+    line-height: var(--tw-leading, var(--leading-heading));
+    @variant sm {
+        font-size: 2.375rem;
+    }
+    @variant lg {
+        font-size: var(--text-44);
+    }
+}
+
+@utility text-heading-section {
+    font-size: 1.375rem;
+    line-height: var(--tw-leading, var(--leading-heading));
+    @variant sm {
+        font-size: 1.625rem;
+    }
+    @variant lg {
+        font-size: 1.875rem;
+    }
+}
+
+@utility text-heading-row {
+    font-size: 1.25rem;
+    line-height: var(--tw-leading, var(--leading-heading));
+    @variant sm {
+        font-size: 1.375rem;
+    }
+    @variant lg {
+        font-size: 1.5rem;
+    }
+}
+
 @layer base {
     /* The Figma file pins DM Sans to optical size 14 at every size; browsers would otherwise
        pick a narrower cut for large text and headings would wrap differently. */

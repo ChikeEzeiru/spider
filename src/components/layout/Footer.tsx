@@ -8,13 +8,13 @@ export default function Footer() {
       <div className="flex w-full max-w-320 flex-col border-x border-secondary">
         <nav
           aria-label="Footer"
-          className="grid grid-cols-2 gap-x-4 gap-y-10 px-8 pt-16 pb-28 md:grid-cols-3 lg:grid-cols-6"
+          className="grid grid-cols-2 gap-x-4 gap-y-10 px-4 sm:px-6 lg:px-8 pt-16 pb-28 md:grid-cols-3 lg:grid-cols-6"
         >
           {FOOTER_COLUMNS.map((groups) => (
             <div key={groups[0].title} className="flex flex-col gap-10">
               {groups.map(({ title, links }) => (
                 <div key={title} className="flex flex-col gap-4">
-                  <h2 className="text-lg font-medium text-primary">{title}</h2>
+                  <h2 className="text-md font-medium text-primary sm:text-lg">{title}</h2>
                   <ul className="flex flex-col gap-3">
                     {links.map(({ label, href }) => (
                       <li key={label}>
@@ -30,7 +30,7 @@ export default function Footer() {
           ))}
         </nav>
 
-        <div className="flex flex-col gap-4 border-t border-secondary px-8 py-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 border-t border-secondary px-4 sm:px-6 lg:px-8 py-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-6">
             <Link href="/" aria-label="Spider home">
               <SpiderIcon size={20} />

@@ -10,8 +10,8 @@ const STEPS: { title: string; body: string; scene: SceneName }[] = [
 export default function HowItWorks() {
   return (
     <section data-spider-scene data-spider-mode="patrol" className="flex justify-center px-2">
-      <div className="flex w-full max-w-320 flex-col gap-12 md:gap-14 lg:gap-16 border-x border-b border-secondary px-8 py-16 md:py-20 lg:py-24">
-        <h2 className="text-display-sm leading-heading tracking-heading text-pretty text-tertiary">
+      <div className="flex w-full max-w-320 flex-col gap-12 md:gap-14 lg:gap-16 border-x border-b border-secondary px-4 sm:px-6 lg:px-8 py-16 md:py-20 lg:py-24">
+        <h2 className="text-heading-section leading-heading tracking-heading text-pretty text-tertiary">
           <span className="font-medium text-primary">Describe the app, connect its parts, build and deploy.</span>{" "}
           The TypeScript spec declares framework-level structure. Your app code supplies the interface and product
           behavior
@@ -23,7 +23,7 @@ export default function HowItWorks() {
               <div data-spider-perch className="relative h-50 overflow-hidden rounded-sm bg-aztec-950">
                 <AsciiScene scene={scene} tonal toneClassName="text-aztec-50" />
               </div>
-              <p className="text-xl leading-heading tracking-heading text-pretty text-tertiary">
+              <p className="text-lg leading-heading tracking-heading text-pretty text-tertiary lg:text-xl">
                 <span className="text-primary">{title}.</span> {body}
               </p>
             </li>
