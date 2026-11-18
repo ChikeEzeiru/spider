@@ -21,10 +21,14 @@ export default function Hero() {
           <h1 className="text-heading-hero tracking-heading text-pretty text-tertiary">
             <span className="font-medium text-primary">
               Build full-stack apps without wiring every layer by hand.
-            </span>{" "}
-            Define your app in TypeScript. Spider connects your React interface
-            &amp; Node.js server with built-in auth, typed operations,
-            background jobs, &amp; email.
+            </span>
+            {/* Phones get the headline alone, as on Stripe; the detail returns from sm up. */}
+            <span className="max-sm:hidden">
+              {" "}
+              Define your app in TypeScript. Spider connects your React interface
+              &amp; Node.js server with built-in auth, typed operations,
+              background jobs, &amp; email.
+            </span>
           </h1>
           <div className="flex flex-wrap gap-4">
             <Button href="#" size="xl" color="secondary">

@@ -148,7 +148,7 @@
 }
 
 @utility text-heading-row {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     line-height: var(--tw-leading, var(--leading-heading));
     @variant sm {
         font-size: 1.375rem;
