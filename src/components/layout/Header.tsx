@@ -12,9 +12,9 @@ export default function Header() {
     // Sticky, above the spider's layer (z-40) so the mascot passes under the nav and never over the open menu.
     <header className="sticky top-0 z-50 bg-secondary">
       <HeaderBar>
-        <div className="flex h-full items-center gap-6 md:p-2">
+        <div className="flex h-full items-center gap-6 md:py-2">
           <Link href="/" aria-label="Spider home" className="text-primary">
-            <SpiderIcon size={36} blink />
+            <SpiderIcon size={36} blink className="size-7 sm:size-8 lg:size-9" />
           </Link>
           <nav aria-label="Main" className="hidden h-full gap-2 p-2 md:flex">
             {NAV_LINKS.map(({ label, href }) => (

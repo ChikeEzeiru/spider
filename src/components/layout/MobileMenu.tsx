@@ -85,7 +85,7 @@ export default function MobileMenu() {
       >
         <HeaderBar>
           <Link href="/" aria-label="Spider home" className="text-primary" onClick={close}>
-            <SpiderIcon size={36} />
+            <SpiderIcon size={36} className="size-7 sm:size-8 lg:size-9" />
           </Link>
           <MenuToggle ref={closeButton} open={open} aria-controls={panelId} aria-label="Close menu" onClick={close} />
         </HeaderBar>
