@@ -30,7 +30,8 @@ export default function Hero() {
               background jobs, &amp; email.
             </span>
           </h1>
-          <div className="flex flex-wrap gap-4">
+          {/* Phones stack the buttons full width, as on Stripe. */}
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:gap-4">
             <Button href="#" size="xl" color="secondary">
               See how it works
             </Button>
