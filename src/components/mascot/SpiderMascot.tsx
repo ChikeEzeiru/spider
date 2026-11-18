@@ -385,7 +385,12 @@ export default function SpiderMascot() {
 
     window.addEventListener("pointermove", onPointerMove);
     pageResize.observe(document.body);
-    document.fonts.ready.then(relayout);
+    // A promise can't be unsubscribed from, so a torn-down mascot (React mounts effects twice in
+    // development) ignores it; otherwise a second controller would drive the same spider.
+    let disposed = false;
+    document.fonts.ready.then(() => {
+      if (!disposed) relayout();
+    });
     m.svg.addEventListener("click", onPoke);
     perches.forEach((el) => el.addEventListener("pointerenter", onPerchEnter));
 
@@ -399,6 +404,7 @@ export default function SpiderMascot() {
     }
 
     return () => {
+      disposed = true;
       interrupt();
       stopPeeking();
       sitOn(null);
