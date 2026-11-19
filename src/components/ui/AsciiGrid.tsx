@@ -46,6 +46,8 @@ const DRIFT_FLIPS_PER_SECOND = 0.6;
 
 // How much of a pulse's ink turns light orange at its crest.
 const PULSE_WARMTH = 0.75;
+// How much of the pointer's glow turns brand orange where it is strongest.
+const POINTER_BRAND = 0.7;
 
 interface Cell {
   x: number;
@@ -54,6 +56,8 @@ interface Cell {
   heat: number;
   /** The share of heat that came from a pulse, which glows warm rather than grey. */
   warmth: number;
+  /** The share of heat that came from the pointer, which takes on the brand colour. */
+  touch: number;
   drift: number;
 }
 
@@ -79,6 +83,7 @@ export default function AsciiGrid() {
   const accentRef = useRef<HTMLDivElement>(null);
   const driftRef = useRef<HTMLSpanElement>(null);
   const warmRef = useRef<HTMLSpanElement>(null);
+  const brandRef = useRef<HTMLSpanElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -86,8 +91,9 @@ export default function AsciiGrid() {
     const accentHolder = accentRef.current;
     const driftHolder = driftRef.current;
     const warmHolder = warmRef.current;
+    const brandHolder = brandRef.current;
     const ctx = canvas?.getContext("2d");
-    if (!canvas || !accentHolder || !driftHolder || !warmHolder || !ctx) return;
+    if (!canvas || !accentHolder || !driftHolder || !warmHolder || !brandHolder || !ctx) return;
 
     // Colours and font come from Tailwind tokens on these elements.
     const canvasStyle = getComputedStyle(canvas);
@@ -95,6 +101,7 @@ export default function AsciiGrid() {
     const accentColor = getComputedStyle(accentHolder).color;
     const driftColor = getComputedStyle(driftHolder).color;
     const warmColor = getComputedStyle(warmHolder).color;
+    const brandColor = getComputedStyle(brandHolder).color;
     const font = `500 ${FONT_SIZE}px ${canvasStyle.fontFamily}`;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -121,7 +128,7 @@ export default function AsciiGrid() {
           const x = left + column * STEP_X;
           const y = top + row * STEP_Y;
           if (x < -FONT_SIZE || x > width + FONT_SIZE || y < -FONT_SIZE || y > height + FONT_SIZE) continue;
-          cells.push({ x, y, glyph: randomGlyph(), heat: 0, warmth: 0, drift: driftAt(x, y, time) });
+          cells.push({ x, y, glyph: randomGlyph(), heat: 0, warmth: 0, touch: 0, drift: driftAt(x, y, time) });
         }
       }
     };
@@ -149,6 +156,11 @@ export default function AsciiGrid() {
         if (cell.warmth > 0.01) {
           ctx.globalAlpha = cell.warmth * PULSE_WARMTH;
           ctx.fillStyle = warmColor;
+          ctx.fillText(cell.glyph, cell.x, cell.y);
+        }
+        if (cell.touch > 0.01) {
+          ctx.globalAlpha = cell.touch * POINTER_BRAND;
+          ctx.fillStyle = brandColor;
           ctx.fillText(cell.glyph, cell.x, cell.y);
         }
       }
@@ -182,7 +194,9 @@ export default function AsciiGrid() {
 
       for (const cell of cells) {
         const pulseHeat = pulseHeatFor(cell);
-        cell.heat = Math.max(pulseHeat, pointerHeatFor(cell), cell.heat - dt * COOLING_PER_SECOND);
+        const pointerHeat = pointerHeatFor(cell);
+        cell.heat = Math.max(pulseHeat, pointerHeat, cell.heat - dt * COOLING_PER_SECOND);
+        cell.touch = Math.max(pointerHeat, cell.touch - dt * COOLING_PER_SECOND);
         cell.warmth = Math.max(pulseHeat, cell.warmth - dt * COOLING_PER_SECOND);
         cell.drift = driftAt(cell.x, cell.y, time);
         const flipsPerSecond =
@@ -287,6 +301,7 @@ export default function AsciiGrid() {
     <div ref={accentRef} aria-hidden="true" className="absolute inset-0 text-aztec-600">
       <span ref={driftRef} className="hidden text-aztec-500" />
       <span ref={warmRef} className="hidden text-punch-300" />
+      <span ref={brandRef} className="hidden text-brand-600" />
       <canvas ref={canvasRef} className="size-full font-mono text-aztec-300" />
     </div>
   );
