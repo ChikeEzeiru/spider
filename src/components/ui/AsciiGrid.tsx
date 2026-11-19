@@ -5,7 +5,8 @@ import { ASCII_PULSE_EVENT, type AsciiPulseDetail } from "./asciiPulse";
 
 /*
  * The hero's dot grid, redrawn as code glyphs that keep rewriting themselves.
- * Ripples ("build pulses") run through it now and then, the pointer stirs it, and any
+ * A soft, wide band of slightly darker glyphs drifts slowly across it, so the field is never
+ * quite still. Ripples ("build pulses") run through it now and then, the pointer stirs it, and any
  * element marked data-ascii-pulse sends a ripple out when hovered. Other code (the spider
  * landing on a button) can send one from any point with sendAsciiPulse.
  */
@@ -36,11 +37,24 @@ const PULSE_INTERVAL: [number, number] = [2.5, 5];
 
 const POINTER_RADIUS = 130;
 
+// The drifting band: a slow diagonal swell, gently warped so its edge never reads as a line.
+const DRIFT_WAVELENGTH = 1100;
+const DRIFT_SPEED = 22;
+const DRIFT_ANGLE = Math.PI / 7;
+const DRIFT_STRENGTH = 1;
+const DRIFT_FLIPS_PER_SECOND = 0.6;
+
+// How much of a pulse's ink turns light orange at its crest.
+const PULSE_WARMTH = 0.75;
+
 interface Cell {
   x: number;
   y: number;
   glyph: string;
   heat: number;
+  /** The share of heat that came from a pulse, which glows warm rather than grey. */
+  warmth: number;
+  drift: number;
 }
 
 interface Pulse {
@@ -51,21 +65,36 @@ interface Pulse {
 
 const randomGlyph = () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
 const randomBetween = ([min, max]: [number, number]) => min + Math.random() * (max - min);
+const smooth = (t: number) => t * t * (3 - 2 * t);
+
+/** 0..1: how deep a point sits in the drifting band at a given time. */
+function driftAt(x: number, y: number, time: number) {
+  const along = x * Math.cos(DRIFT_ANGLE) + y * Math.sin(DRIFT_ANGLE);
+  const warp = 70 * Math.sin(y / 260 + time * 0.15) + 40 * Math.sin(x / 410 - time * 0.1);
+  const wave = Math.sin(((along + warp - time * DRIFT_SPEED) / DRIFT_WAVELENGTH) * Math.PI * 2);
+  return smooth(Math.max(0, (wave - 0.25) / 0.75)) * DRIFT_STRENGTH;
+}
 
 export default function AsciiGrid() {
   const accentRef = useRef<HTMLDivElement>(null);
+  const driftRef = useRef<HTMLSpanElement>(null);
+  const warmRef = useRef<HTMLSpanElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const accentHolder = accentRef.current;
+    const driftHolder = driftRef.current;
+    const warmHolder = warmRef.current;
     const ctx = canvas?.getContext("2d");
-    if (!canvas || !accentHolder || !ctx) return;
+    if (!canvas || !accentHolder || !driftHolder || !warmHolder || !ctx) return;
 
-    // Colours and font come from Tailwind tokens on the two elements.
+    // Colours and font come from Tailwind tokens on these elements.
     const canvasStyle = getComputedStyle(canvas);
     const baseColor = canvasStyle.color;
     const accentColor = getComputedStyle(accentHolder).color;
+    const driftColor = getComputedStyle(driftHolder).color;
+    const warmColor = getComputedStyle(warmHolder).color;
     const font = `500 ${FONT_SIZE}px ${canvasStyle.fontFamily}`;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -74,6 +103,7 @@ export default function AsciiGrid() {
     const pointer = { x: 0, y: 0, strength: 0 };
     let width = 0;
     let height = 0;
+    let time = 0;
 
     const layout = () => {
       const dpr = window.devicePixelRatio || 1;
@@ -91,7 +121,7 @@ export default function AsciiGrid() {
           const x = left + column * STEP_X;
           const y = top + row * STEP_Y;
           if (x < -FONT_SIZE || x > width + FONT_SIZE || y < -FONT_SIZE || y > height + FONT_SIZE) continue;
-          cells.push({ x, y, glyph: randomGlyph(), heat: 0 });
+          cells.push({ x, y, glyph: randomGlyph(), heat: 0, warmth: 0, drift: driftAt(x, y, time) });
         }
       }
     };
@@ -102,12 +132,23 @@ export default function AsciiGrid() {
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       for (const cell of cells) {
-        ctx.globalAlpha = 1 - cell.heat;
+        const calm = 1 - cell.heat;
+        ctx.globalAlpha = calm * (1 - cell.drift);
         ctx.fillStyle = baseColor;
         ctx.fillText(cell.glyph, cell.x, cell.y);
+        if (cell.drift > 0.01) {
+          ctx.globalAlpha = calm * cell.drift;
+          ctx.fillStyle = driftColor;
+          ctx.fillText(cell.glyph, cell.x, cell.y);
+        }
         if (cell.heat > 0.01) {
           ctx.globalAlpha = cell.heat;
           ctx.fillStyle = accentColor;
+          ctx.fillText(cell.glyph, cell.x, cell.y);
+        }
+        if (cell.warmth > 0.01) {
+          ctx.globalAlpha = cell.warmth * PULSE_WARMTH;
+          ctx.fillStyle = warmColor;
           ctx.fillText(cell.glyph, cell.x, cell.y);
         }
       }
@@ -116,29 +157,36 @@ export default function AsciiGrid() {
 
     const pulseAt = (x: number, y: number) => pulses.push({ x, y, age: 0 });
 
-    const heatFor = (cell: Cell) => {
+    const pulseHeatFor = (cell: Cell) => {
       let heat = 0;
       for (const pulse of pulses) {
         const distance = Math.hypot(cell.x - pulse.x, cell.y - pulse.y);
         const fromFront = Math.abs(distance - pulse.age * PULSE_SPEED);
         const fade = 1 - pulse.age / PULSE_LIFETIME;
-        heat = Math.max(heat, Math.max(0, 1 - fromFront / PULSE_BAND) * fade);
-      }
-      if (pointer.strength > 0) {
-        const distance = Math.hypot(cell.x - pointer.x, cell.y - pointer.y);
-        heat = Math.max(heat, Math.max(0, 1 - distance / POINTER_RADIUS) * pointer.strength);
+        heat = Math.max(heat, smooth(Math.max(0, 1 - fromFront / PULSE_BAND)) * fade);
       }
       return heat;
     };
 
+    const pointerHeatFor = (cell: Cell) => {
+      if (pointer.strength <= 0) return 0;
+      const distance = Math.hypot(cell.x - pointer.x, cell.y - pointer.y);
+      return smooth(Math.max(0, 1 - distance / POINTER_RADIUS)) * pointer.strength;
+    };
+
     const step = (dt: number) => {
+      time += dt;
       for (const pulse of pulses) pulse.age += dt;
       while (pulses.length && pulses[0].age > PULSE_LIFETIME) pulses.shift();
       pointer.strength = Math.max(0, pointer.strength - dt * 1.5);
 
       for (const cell of cells) {
-        cell.heat = Math.max(heatFor(cell), cell.heat - dt * COOLING_PER_SECOND);
-        const flipsPerSecond = IDLE_FLIPS_PER_SECOND + cell.heat * HOT_FLIPS_PER_SECOND;
+        const pulseHeat = pulseHeatFor(cell);
+        cell.heat = Math.max(pulseHeat, pointerHeatFor(cell), cell.heat - dt * COOLING_PER_SECOND);
+        cell.warmth = Math.max(pulseHeat, cell.warmth - dt * COOLING_PER_SECOND);
+        cell.drift = driftAt(cell.x, cell.y, time);
+        const flipsPerSecond =
+          IDLE_FLIPS_PER_SECOND + cell.drift * DRIFT_FLIPS_PER_SECOND + cell.heat * HOT_FLIPS_PER_SECOND;
         if (Math.random() < flipsPerSecond * dt) cell.glyph = randomGlyph();
       }
     };
@@ -236,7 +284,9 @@ export default function AsciiGrid() {
   }, []);
 
   return (
-    <div ref={accentRef} aria-hidden="true" className="absolute inset-0 text-aztec-500">
+    <div ref={accentRef} aria-hidden="true" className="absolute inset-0 text-aztec-600">
+      <span ref={driftRef} className="hidden text-aztec-500" />
+      <span ref={warmRef} className="hidden text-punch-300" />
       <canvas ref={canvasRef} className="size-full font-mono text-aztec-300" />
     </div>
   );
