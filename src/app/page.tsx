@@ -1,4 +1,5 @@
 import Footer from "@/components/layout/Footer";
+import SpiderRolls from "@/components/footer-concepts/SpiderRolls";
 import Header from "@/components/layout/Header";
 import SpiderMascot from "@/components/mascot/SpiderMascot";
 import Cta from "@/components/sections/Cta";
@@ -19,7 +20,7 @@ export default function Home() {
       <Examples />
       <Cta />
 
-      <Footer />
+      <Footer showcase={<SpiderRolls />} />
 
       <SpiderMascot />
     </div>

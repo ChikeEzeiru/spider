@@ -1,8 +1,10 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import SpiderIcon from "@/components/ui/SpiderIcon";
 import { FOOTER_COLUMNS, STATUS_URL } from "./footerLinks";
 
-export default function Footer() {
+/** `showcase` renders a full-width band between the links and the bottom bar. */
+export default function Footer({ showcase }: { showcase?: ReactNode } = {}) {
   return (
     <footer className="flex justify-center px-2">
       <div className="flex w-full max-w-320 flex-col border-x border-secondary">
@@ -29,6 +31,8 @@ export default function Footer() {
             </div>
           ))}
         </nav>
+
+        {showcase}
 
         <div className="flex flex-col gap-4 border-t border-secondary px-4 sm:px-6 lg:px-8 py-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-6">
