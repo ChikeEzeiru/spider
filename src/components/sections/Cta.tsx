@@ -20,7 +20,7 @@ export default function Cta() {
           to install the CLI and run a starter app.
         </h2>
         <Button
-          href="#"
+          href="/docs/quickstart"
           size="md"
           iconTrailing={<BookClosed data-icon="trailing" />}
           data-spider-perch

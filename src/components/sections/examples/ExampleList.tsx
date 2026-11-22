@@ -20,7 +20,7 @@ export default function ExampleList() {
         const isOpen = open === i;
         const panelId = `${baseId}-${i}`;
         return (
-          <li key={id}>
+          <li key={id} className="px-4 sm:px-6 lg:px-8">
             <div className="group flex items-center gap-5 p-2">
               <button
                 type="button"
@@ -88,9 +88,9 @@ export default function ExampleList() {
                       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-linear-to-t from-aztec-950" />
                     </div>
 
-                    <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between md:gap-12">
+                    <div className="flex flex-col gap-3">
                       <p className="max-w-160 text-md text-tertiary">{summary}</p>
-                      <ul className="flex flex-wrap gap-2 md:justify-end">
+                      <ul className="flex flex-wrap gap-2">
                         {features.map((feature) => (
                           <li key={feature} className="rounded-sm bg-tertiary px-2 py-0.5 text-xs text-secondary">
                             {feature}

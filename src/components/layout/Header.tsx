@@ -3,9 +3,10 @@ import Link from "next/link";
 import { Code02 } from "@untitledui/icons";
 import { Button } from "@/components/base/buttons/button";
 import SpiderIcon from "@/components/ui/SpiderIcon";
+import DesktopNav from "./DesktopNav";
 import HeaderBar from "./HeaderBar";
 import MobileMenu from "./MobileMenu";
-import { GITHUB_URL, NAV_LINKS, START_BUILDING_URL } from "./navLinks";
+import { GITHUB_URL, START_BUILDING_URL } from "./navLinks";
 
 export default function Header() {
   return (
@@ -16,17 +17,7 @@ export default function Header() {
           <Link href="/" aria-label="Spider home" className="text-primary">
             <SpiderIcon size={36} blink className="size-7 sm:size-8 lg:size-9" />
           </Link>
-          <nav aria-label="Main" className="hidden h-full gap-2 p-2 md:flex">
-            {NAV_LINKS.map(({ label, href }) => (
-              <Link
-                key={label}
-                href={href}
-                className="flex items-center px-2 text-md text-black transition-colors hover:text-tertiary"
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
+          <DesktopNav />
         </div>
 
         <div className="hidden items-stretch gap-4 md:flex">

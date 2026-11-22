@@ -10,14 +10,13 @@ export default function Examples() {
             <span className="font-medium text-primary">Explore apps built with Spider.</span> See how developers use
             Spider across different kinds of apps.
           </h2>
-          <Button href="#" size="md" color="secondary">
+          <Button href="/examples" size="md" color="secondary">
             See more examples
           </Button>
         </div>
 
-        <div className="px-4 sm:px-6 lg:px-8">
-          <ExampleList />
-        </div>
+        {/* Each row carries its own side padding, so the lines between rows meet the frame. */}
+        <ExampleList />
       </div>
     </section>
   );

@@ -32,11 +32,11 @@ export default function Hero() {
           </h1>
           {/* Phones stack the buttons full width, as on Stripe. */}
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:gap-4">
-            <Button href="#" size="xl" color="secondary">
+            <Button href="/product" size="xl" color="secondary">
               See how it works
             </Button>
             <Button
-              href="#"
+              href="/docs/quickstart"
               size="xl"
               iconTrailing={<Code02 data-icon="trailing" />}
               data-spider-perch

@@ -12,7 +12,7 @@ export default function Stack() {
             client, Node.js for the server, &amp; Prisma for data. Check the supported databases and extension points
             against your app&apos;s needs.
           </h2>
-          <Button href="#" size="md" color="secondary" iconTrailing={<BookClosed data-icon="trailing" />}>
+          <Button href="/docs" size="md" color="secondary" iconTrailing={<BookClosed data-icon="trailing" />}>
             Read the Docs
           </Button>
         </div>

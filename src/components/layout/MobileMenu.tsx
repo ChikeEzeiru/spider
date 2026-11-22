@@ -9,6 +9,7 @@ import SpiderIcon from "@/components/ui/SpiderIcon";
 import { cx } from "@/utils/cx";
 import HeaderBar from "./HeaderBar";
 import { GITHUB_URL, NAV_LINKS, START_BUILDING_URL } from "./navLinks";
+import { useIsCurrent } from "./useIsCurrent";
 
 const BAR = "absolute left-0 h-0.5 w-4 rounded-full bg-fg-primary transition-all duration-300 ease-in-out";
 
@@ -35,6 +36,7 @@ export default function MobileMenu() {
   const openButton = useRef<HTMLButtonElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
   const close = () => setOpen(false);
+  const isCurrent = useIsCurrent();
 
   useEffect(() => {
     if (!open) return;
@@ -100,7 +102,15 @@ export default function MobileMenu() {
           <ul>
             {NAV_LINKS.map(({ label, href }) => (
               <li key={label} className="border-b border-dashed border-secondary">
-                <Link href={href} onClick={close} className="flex h-12.5 items-center text-lg text-primary">
+                <Link
+                  href={href}
+                  onClick={close}
+                  aria-current={isCurrent(href) ? "page" : undefined}
+                  className={cx(
+                    "flex h-12.5 items-center text-lg transition-colors hover:text-primary",
+                    isCurrent(href) ? "font-medium text-primary" : "text-tertiary",
+                  )}
+                >
                   {label}
                 </Link>
               </li>
