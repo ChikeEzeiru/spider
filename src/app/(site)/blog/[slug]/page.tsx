@@ -71,7 +71,7 @@ async function Post({ params }: { params: PageProps<"/blog/[slug]">["params"] })
             block.type === "p" ? (
               <p key={i}>{block.text}</p>
             ) : block.type === "h2" ? (
-              <h2 key={i} id={slug(block.text)} className="scroll-mt-24">
+              <h2 key={i} id={slug(block.text)} className="scroll-mt-18">
                 {block.text}
               </h2>
             ) : block.type === "quote" ? (

@@ -72,7 +72,7 @@ export default function LegalPage({
               <li key={heading} className="flex gap-4 sm:gap-6">
                 <span className="w-4 shrink-0 pt-1 text-sm text-quaternary">{i + 1}</span>
                 <section className="flex min-w-0 flex-col gap-3">
-                  <h2 id={slug(heading)} className="scroll-mt-24 text-lg font-medium text-primary">
+                  <h2 id={slug(heading)} className="scroll-mt-18 text-lg font-medium text-primary">
                     {heading}
                   </h2>
                   <Prose className="prose-p:my-0 prose-ul:my-0 [&>*+*]:mt-4">{body}</Prose>
