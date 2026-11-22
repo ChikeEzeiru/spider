@@ -1,10 +1,11 @@
-import { Children, isValidElement, type ReactNode } from "react";
+import { Children, cloneElement, isValidElement, type ReactElement, type ReactNode } from "react";
 import Link from "next/link";
 import { GITHUB_URL } from "@/components/layout/navLinks";
 import { Prose } from "@/components/page/PageFrame";
 import Toc from "@/components/page/Toc";
 import { formatDate } from "@/content/blog";
 import { cx } from "@/utils/cx";
+import { slug } from "@/utils/slug";
 import { DOCS, groupOf, type DocLink } from "./docsIndex";
 
 /**
@@ -84,14 +85,23 @@ export default function DocsPage({
 /** The main column's side padding, shared by the title, each section and the page links. */
 const SIDE = "px-4 sm:px-6 lg:px-12";
 
-/** Splits a page's content at each h2, so every section can sit between its own lines. */
+/**
+ * Splits a page's content at each h2, so every section can sit between its own lines.
+ * Each h2 gets its id here, on the server, so links from the contents and from search land on it.
+ */
 function sections(children: ReactNode) {
   const groups: ReactNode[][] = [];
   for (const child of Children.toArray(children)) {
-    if (groups.length === 0 || (isValidElement(child) && child.type === "h2")) groups.push([]);
-    groups[groups.length - 1].push(child);
+    const isHeading = isValidElement(child) && child.type === "h2";
+    if (groups.length === 0 || isHeading) groups.push([]);
+    groups[groups.length - 1].push(isHeading ? withId(child as ReactElement<{ children?: ReactNode }>) : child);
   }
   return groups;
+}
+
+function withId(heading: ReactElement<{ children?: ReactNode }>) {
+  const text = Children.toArray(heading.props.children).filter((c) => typeof c === "string").join("");
+  return text ? cloneElement(heading, { id: slug(text), className: "scroll-mt-24" } as object) : heading;
 }
 
 function Pager({ link, dir }: { link: DocLink; dir: "Previous" | "Next" }) {

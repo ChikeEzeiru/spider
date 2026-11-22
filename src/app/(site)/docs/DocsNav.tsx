@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SearchLg } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 import { DOC_GROUPS, DOCS } from "./docsIndex";
+import SearchPalette from "./SearchPalette";
 
 const linkClass = (active: boolean) =>
   cx(
@@ -13,57 +14,59 @@ const linkClass = (active: boolean) =>
     active ? "bg-tertiary font-medium text-primary" : "text-secondary hover:text-primary",
   );
 
-/** The docs' page list: a filterable, grouped sidebar on wide screens, a row of tabs above the page on narrow ones. */
+/**
+ * The docs' page list: a grouped sidebar on wide screens, a row of tabs above the page on narrow ones.
+ * Search opens a command palette, from the button here or with ⌘K / Ctrl+K anywhere in the docs.
+ */
 export default function DocsNav() {
   const pathname = usePathname();
-  const [query, setQuery] = useState("");
-  const input = useRef<HTMLInputElement>(null);
+  const [searching, setSearching] = useState(false);
 
-  // ⌘K / Ctrl+K jumps to the filter, the way most docs sites open search.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        input.current?.focus();
+        setSearching((open) => !open);
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const q = query.trim().toLowerCase();
-  const groups = DOC_GROUPS.map((g) => ({ ...g, pages: g.pages.filter((p) => p.label.toLowerCase().includes(q)) })).filter(
-    (g) => g.pages.length,
-  );
-
   return (
     <>
-      {/* Narrow screens: the pages as a scrolling row. */}
-      <nav aria-label="Docs" className="scrollbar-hide flex gap-1 overflow-x-auto lg:hidden">
-        {DOCS.map(({ href, label }) => (
-          <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined} className={linkClass(pathname === href)}>
-            {label}
-          </Link>
-        ))}
-      </nav>
+      {/* Narrow screens: search, then the pages as a scrolling row. */}
+      <div className="flex items-center gap-2 lg:hidden">
+        <button
+          type="button"
+          onClick={() => setSearching(true)}
+          aria-label="Search docs"
+          className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-sm border border-secondary bg-primary text-fg-quaternary transition-colors hover:text-fg-secondary"
+        >
+          <SearchLg className="size-4" />
+        </button>
+        <nav aria-label="Docs" className="scrollbar-hide flex gap-1 overflow-x-auto">
+          {DOCS.map(({ href, label }) => (
+            <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined} className={linkClass(pathname === href)}>
+              {label}
+            </Link>
+          ))}
+        </nav>
+      </div>
 
       <div className="flex flex-col gap-8 max-lg:hidden">
-        <label className="flex h-10 items-center gap-2 rounded-sm border border-secondary bg-primary px-3 text-sm transition-colors focus-within:border-primary">
+        <button
+          type="button"
+          onClick={() => setSearching(true)}
+          className="flex h-10 cursor-pointer items-center gap-2 rounded-sm border border-secondary bg-primary px-3 text-sm text-placeholder transition-colors hover:border-primary"
+        >
           <SearchLg className="size-4 shrink-0 text-fg-quaternary" />
-          <input
-            ref={input}
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search docs"
-            aria-label="Search docs"
-            className="min-w-0 flex-1 bg-transparent text-primary outline-none placeholder:text-placeholder"
-          />
+          <span className="flex-1 text-left">Search docs</span>
           <kbd className="font-sans text-xs text-quaternary">⌘K</kbd>
-        </label>
+        </button>
 
         <nav aria-label="Docs" className="flex flex-col gap-6">
-          {groups.map(({ title, pages }) => (
+          {DOC_GROUPS.map(({ title, pages }) => (
             <div key={title} className="flex flex-col gap-1">
               <p className="px-3 pb-1 text-xs text-quaternary">{title}</p>
               {pages.map(({ href, label }) => (
@@ -73,9 +76,10 @@ export default function DocsNav() {
               ))}
             </div>
           ))}
-          {groups.length ? null : <p className="px-3 text-sm text-tertiary">No pages match “{query}”.</p>}
         </nav>
       </div>
+
+      <SearchPalette open={searching} onOpenChange={setSearching} />
     </>
   );
 }
