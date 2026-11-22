@@ -39,7 +39,7 @@ export default function DocsNav() {
   return (
     <>
       {/* Narrow screens: the pages as a scrolling row. */}
-      <nav aria-label="Docs" className="flex gap-1 overflow-x-auto lg:hidden">
+      <nav aria-label="Docs" className="scrollbar-hide flex gap-1 overflow-x-auto lg:hidden">
         {DOCS.map(({ href, label }) => (
           <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined} className={linkClass(pathname === href)}>
             {label}

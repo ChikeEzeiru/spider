@@ -3,7 +3,7 @@ import Link from "next/link";
 import LegalPage from "@/components/page/LegalPage";
 
 export const metadata: Metadata = {
-  title: "Terms of use · Spider",
+  title: "Terms of service · Spider",
   description: "The terms for using this website and Spider's documentation.",
 };
 
@@ -11,7 +11,7 @@ export default function TermsPage() {
   return (
     <LegalPage
       path="/terms"
-      title="Terms of use"
+      title="Terms of service"
       updated="2026-11-21"
       sections={[
         {

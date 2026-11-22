@@ -41,9 +41,9 @@ export const FOOTER_COLUMNS: LinkGroup[][] = [
     group("Compare", ["Next.js", "RedwoodJS", "T3 Stack"]),
   ],
   [
-    group("Legal", ["Privacy policy", "Terms of use", "Security", "License"], {
+    group("Legal", ["Privacy policy", "Terms of service", "Security", "License"], {
       "Privacy policy": "/privacy",
-      "Terms of use": "/terms",
+      "Terms of service": "/terms",
       Security: "/security",
       License: "/license",
     }),

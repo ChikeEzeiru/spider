@@ -8,7 +8,7 @@ import Toc from "./Toc";
 
 const DOCUMENTS = [
   { href: "/privacy", label: "Privacy policy" },
-  { href: "/terms", label: "Terms of use" },
+  { href: "/terms", label: "Terms of service" },
   { href: "/security", label: "Security" },
   { href: "/license", label: "License" },
 ];
@@ -36,7 +36,7 @@ export default function LegalPage({
       <div className="flex w-full max-w-320 flex-col border-x border-b border-secondary lg:flex-row">
         <aside className="border-b border-secondary px-4 py-4 sm:px-6 lg:w-64 lg:shrink-0 lg:border-r lg:border-b-0 lg:px-5 lg:py-12">
           <div className="flex flex-col gap-8 lg:sticky lg:top-24">
-            <nav aria-label="Legal" className="flex gap-1 overflow-x-auto lg:flex-col">
+            <nav aria-label="Legal" className="scrollbar-hide flex gap-1 overflow-x-auto lg:flex-col">
               <p className="px-3 pb-1 text-xs text-quaternary max-lg:hidden">Legal</p>
               {DOCUMENTS.map(({ href, label }) => (
                 <Link

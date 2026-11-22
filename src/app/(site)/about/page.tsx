@@ -106,10 +106,11 @@ function Row({ label, heading, children }: { label: string; heading?: boolean; c
   }
   return (
     <Band className="flex flex-col lg:flex-row">
-      <Label className="shrink-0 border-secondary px-4 pt-12 pb-6 text-sm text-tertiary sm:px-6 sm:pt-14 sm:text-md lg:w-80 lg:border-r lg:px-8 lg:py-14">
+      <Label className="shrink-0 border-secondary px-4 pt-12 text-sm text-tertiary sm:px-6 sm:pt-14 sm:text-md lg:w-80 lg:border-r lg:px-8 lg:py-14">
         {label}
       </Label>
-      <div className="min-w-0 flex-1 border-secondary max-lg:border-t">{children}</div>
+      {/* On phones the label sits straight above its content, with no line between them. */}
+      <div className="min-w-0 flex-1">{children}</div>
     </Band>
   );
 }
@@ -233,7 +234,8 @@ export default function AboutPage() {
               <div
                 key={label}
                 className={cx(
-                  "flex flex-col-reverse gap-1 border-secondary px-4 py-6 sm:px-6 lg:px-12 lg:py-8",
+                  // Reversed so the figure reads first; justify-end keeps every figure on the same top line.
+                  "flex flex-col-reverse justify-end gap-1 border-secondary px-4 py-6 sm:px-6 lg:px-12 lg:py-8",
                   i > 0 && "border-l",
                 )}
               >
