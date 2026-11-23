@@ -46,15 +46,15 @@ export default function ExampleGrid({
         {chips}
       </Band>
       <section className="flex justify-center px-2">
-        <ul className="grid w-full max-w-320 grid-cols-1 border-x border-b border-secondary md:grid-cols-2">
+        <ul className="grid w-full max-w-320 grid-cols-1 border-x border-b border-secondary lg:grid-cols-2">
           {shown.map(({ id, card }, i) => (
             <li
               key={id}
               className={cx(
                 "flex flex-col",
                 i > 0 && "border-t border-secondary",
-                i === 1 && "md:border-t-0",
-                i % 2 === 0 && "md:border-r md:border-secondary",
+                i === 1 && "lg:border-t-0",
+                i % 2 === 0 && "lg:border-r lg:border-secondary",
               )}
             >
               {card}
