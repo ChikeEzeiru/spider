@@ -19,8 +19,15 @@ type Label = "idle" | "command" | "copied";
  * label blurs out and the new one blurs in on top of it. The copy icon swaps to a tick the same way.
  * Everything is interruptible, and reduced motion swaps instantly.
  */
-export default function CopyTemplate({ template }: { template: string }) {
-  const command = `npx spider new --example ${template}`;
+export default function CopyTemplate({
+  template,
+  kind = "example",
+}: {
+  template: string;
+  /** Examples clone a finished app; templates are general starting points. */
+  kind?: "example" | "template";
+}) {
+  const command = `npx spider new --${kind} ${template}`;
   const [hovered, setHovered] = useState(false);
   const [keyboardFocus, setKeyboardFocus] = useState(false);
   const [copied, setCopied] = useState(false);

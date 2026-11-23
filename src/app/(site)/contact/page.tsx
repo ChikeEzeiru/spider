@@ -24,7 +24,7 @@ const CHANNELS = [
     title: "Chat",
     body: "Talk to the team and other people building with Spider, in real time.",
     action: "Join the Discord",
-    href: "#",
+    href: "https://discord.com",
     external: true,
   },
   {
@@ -88,7 +88,11 @@ function ChannelCard({
       </span>
       <h2 className="mt-2 text-heading-row tracking-heading text-primary">{title}</h2>
       <p className="text-md text-pretty text-tertiary">{body}</p>
-      <Link href={href} className="group mt-2 flex w-fit items-center gap-1 text-sm font-medium text-primary">
+      <Link
+        href={href}
+        {...(href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
+        className="group mt-2 flex w-fit items-center gap-1 text-sm font-medium text-primary"
+      >
         {action}
         {external ? (
           <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

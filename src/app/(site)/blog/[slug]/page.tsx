@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): P
 
 // The margin column (back link, contents) and the reading column, shared by the header and body.
 const MARGIN = "lg:w-64 lg:shrink-0";
-const COLUMN = "w-full max-w-170";
+const COLUMN = "w-full max-w-170 min-w-0";
 
 export default function PostPage({ params }: PageProps<"/blog/[slug]">) {
   return (
@@ -71,7 +71,7 @@ async function Post({ params }: { params: PageProps<"/blog/[slug]">["params"] })
             block.type === "p" ? (
               <p key={i}>{block.text}</p>
             ) : block.type === "h2" ? (
-              <h2 key={i} id={slug(block.text)} className="scroll-mt-18">
+              <h2 key={i} id={slug(block.text)} className="scroll-mt-24">
                 {block.text}
               </h2>
             ) : block.type === "quote" ? (

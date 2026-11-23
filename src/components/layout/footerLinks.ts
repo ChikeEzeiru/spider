@@ -1,5 +1,3 @@
-import { GITHUB_URL } from "./navLinks";
-
 export interface LinkGroup {
   title: string;
   links: { label: string; href: string }[];
@@ -34,11 +32,36 @@ export const FOOTER_COLUMNS: LinkGroup[][] = [
       Blog: "/blog",
     }),
   ],
-  [group("Resources", ["Tutorials", "Starter templates", "Migration guides", "Showcase", "Roadmap"], { Showcase: "/examples" })],
-  [group("Community", ["Discord", "Discussions", "Contributing", "Events"])],
   [
-    group("Company", ["About", "Careers", "Brand kit", "Contact"], { About: "/about", Contact: "/contact" }),
-    group("Compare", ["Next.js", "RedwoodJS", "T3 Stack"]),
+    group("Resources", ["Tutorials", "Starter templates", "Migration guides", "Showcase", "Roadmap"], {
+      Tutorials: "/tutorials",
+      "Starter templates": "/templates",
+      "Migration guides": "/migrations",
+      Showcase: "/examples",
+      Roadmap: "/roadmap",
+    }),
+  ],
+  [
+    group("Community", ["Discord", "Discussions", "Contributing", "Events"], {
+      Discord: "https://discord.com",
+      Discussions: "/discussions",
+      Contributing: "/contributing",
+      Events: "/events",
+    }),
+  ],
+  [
+    group("Company", ["About", "Careers", "Brand kit", "Contact"], {
+      About: "/about",
+      Careers: "/careers",
+      "Brand kit": "/brand",
+      Contact: "/contact",
+    }),
+    // As with the socials, the comparisons go to each project's homepage while Spider is a concept.
+    group("Compare", ["Next.js", "RedwoodJS", "T3 Stack"], {
+      "Next.js": "https://nextjs.org",
+      RedwoodJS: "https://redwoodjs.com",
+      "T3 Stack": "https://create.t3.gg",
+    }),
   ],
   [
     group("Legal", ["Privacy policy", "Terms of service", "Security", "License"], {
@@ -47,8 +70,14 @@ export const FOOTER_COLUMNS: LinkGroup[][] = [
       Security: "/security",
       License: "/license",
     }),
-    group("Socials", ["GitHub", "X", "LinkedIn", "YouTube"], { GitHub: GITHUB_URL }),
+    // Spider is a concept, so the socials go to each service's homepage.
+    group("Socials", ["GitHub", "X", "LinkedIn", "YouTube"], {
+      GitHub: "https://github.com",
+      X: "https://x.com",
+      LinkedIn: "https://www.linkedin.com",
+      YouTube: "https://www.youtube.com",
+    }),
   ],
 ];
 
-export const STATUS_URL = "#";
+export const STATUS_URL = "/status";

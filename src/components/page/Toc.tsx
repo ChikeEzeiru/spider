@@ -37,7 +37,7 @@ export default function Toc({
     headings.forEach((h) => {
       const text = h.textContent?.trim() ?? "";
       if (!h.id) h.id = slug(text);
-      h.classList.add("scroll-mt-18");
+      h.classList.add("scroll-mt-24");
       next.push({ id: h.id, label: text.replace(/^\d+\.\s*/, "") });
     });
     // eslint-disable-next-line react-hooks/set-state-in-effect -- the headings only exist in the DOM

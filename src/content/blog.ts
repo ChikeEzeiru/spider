@@ -83,7 +83,7 @@ export const POSTS: Post[] = [
       { type: "h2", text: "A job on a schedule" },
       { type: "p", text: "A scheduled job is a cron expression in the spec and a function in your code. Schedules run in UTC, so a digest set for nine on Monday goes out at the same moment wherever your servers are." },
       { type: "code", name: "spider.config.ts", lines: ["jobs: {", "  digest: job({ cron: \"0 9 * * 1\" }),", "},"] },
-      { type: "code", name: "src/jobs/digest.ts", lines: ["export async function digest(_, { db, email }) {", "  const open = await db.task.count({ where: { done: false } });", "  await email.send({ template: \"Digest\", props: { open } });", "}"] },
+      { type: "code", name: "src/jobs/digest.ts", lines: ["export async function digest(_, { db, email }) {", "  for (const user of await db.user.findMany()) {", "    const open = await db.task.count({ where: { userId: user.id, done: false } });", "    await email.send({ to: user.email, subject: \"Your week in tasks\", template: Digest, props: { open } });", "  }", "}"] },
       { type: "p", text: "The function gets the same context as an operation: the database client, email and the other jobs. There's no separate worker codebase to keep in step with the app." },
       { type: "h2", text: "Queueing work from an action" },
       { type: "p", text: "Leave out the schedule and a job only runs when something queues it. That's how you move slow work out of a request, like sending an invite email after a user is added." },

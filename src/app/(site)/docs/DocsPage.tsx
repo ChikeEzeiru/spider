@@ -101,7 +101,7 @@ function sections(children: ReactNode) {
 
 function withId(heading: ReactElement<{ children?: ReactNode }>) {
   const text = Children.toArray(heading.props.children).filter((c) => typeof c === "string").join("");
-  return text ? cloneElement(heading, { id: slug(text), className: "scroll-mt-18" } as object) : heading;
+  return text ? cloneElement(heading, { id: slug(text), className: "scroll-mt-24" } as object) : heading;
 }
 
 function Pager({ link, dir }: { link: DocLink; dir: "Previous" | "Next" }) {

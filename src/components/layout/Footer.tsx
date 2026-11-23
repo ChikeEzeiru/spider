@@ -20,7 +20,12 @@ export default function Footer({ showcase }: { showcase?: ReactNode } = {}) {
                   <ul className="flex flex-col gap-3">
                     {links.map(({ label, href }) => (
                       <li key={label}>
-                        <Link href={href} className="text-md text-tertiary transition-colors hover:text-primary">
+                        <Link
+                          href={href}
+                          // Links off the site open in a new tab.
+                          {...(href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
+                          className="text-md text-tertiary transition-colors hover:text-primary"
+                        >
                           {label}
                         </Link>
                       </li>
