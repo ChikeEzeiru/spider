@@ -13,10 +13,12 @@ export default function NotFound() {
     <>
       <title>Page not found · Spider</title>
       <section data-spider-scene className="flex justify-center px-2">
-        <div className="relative flex min-h-140 w-full max-w-320 flex-col items-start justify-center gap-6 overflow-hidden border-x border-b border-secondary px-4 py-12 sm:gap-8 sm:px-6 sm:py-18 lg:px-8 lg:py-24">
+        <div className="relative flex min-h-140 w-full max-w-320 flex-col items-start justify-start gap-6 sm:justify-center overflow-hidden border-x border-b border-secondary px-4 py-12 sm:gap-8 sm:px-6 sm:py-18 lg:px-8 lg:py-24">
+          {/* Wide screens: the grid fades in from the right, as in the CTAs. Phones: it rises from the bottom,
+              below the buttons, so no glyphs sit behind the headline. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 mask-[url(/patterns/cta-fade-mask.svg)] mask-size-[1280px_768px] mask-top-right mask-no-repeat"
+            className="pointer-events-none absolute inset-0 mask-[url(/patterns/cta-fade-mask.svg)] mask-size-[1280px_768px] mask-top-right mask-no-repeat max-sm:mask-[linear-gradient(to_bottom,transparent_55%,black)] max-sm:mask-size-[100%_100%] max-sm:mask-top-left"
           >
             <AsciiGrid />
           </div>

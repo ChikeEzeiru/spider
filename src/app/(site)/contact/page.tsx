@@ -16,8 +16,8 @@ const CHANNELS = [
     title: "Questions and ideas",
     body: "Ask how something works, share what you're building, or suggest a feature.",
     action: "GitHub Discussions",
-    href: GITHUB_URL,
-    external: true,
+    href: "/discussions",
+    external: false,
   },
   {
     glyph: "#",
@@ -58,7 +58,12 @@ export default function ContactPage() {
 
       <Band className="flex flex-col gap-3 px-4 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
         <p className="text-md text-pretty text-tertiary">Found a bug? Open an issue on GitHub with the steps to reproduce it.</p>
-        <a href={GITHUB_URL} className="group flex w-fit shrink-0 items-center gap-1 text-sm font-medium text-primary">
+        <a
+          href={GITHUB_URL}
+          target="_blank"
+          rel="noreferrer"
+          className="group flex w-fit shrink-0 items-center gap-1 text-sm font-medium text-primary"
+        >
           Open an issue
           <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </a>

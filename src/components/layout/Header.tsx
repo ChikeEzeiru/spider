@@ -21,7 +21,7 @@ export default function Header() {
         </div>
 
         <div className="hidden items-stretch gap-4 md:flex">
-          <a href={GITHUB_URL} aria-label="Spider on GitHub" className="flex items-center px-2">
+          <a href={GITHUB_URL} target="_blank" rel="noreferrer" aria-label="Spider on GitHub" className="flex items-center px-2">
             <Image src="/icons/github.svg" alt="" width={20} height={20} />
           </a>
           <Button href={START_BUILDING_URL} size="xs" color="dark" iconTrailing={<Code02 data-icon="trailing" />}>

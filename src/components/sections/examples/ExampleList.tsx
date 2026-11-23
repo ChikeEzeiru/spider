@@ -39,6 +39,8 @@ export default function ExampleList() {
                     <motion.a
                       key="source"
                       href={href}
+                      target="_blank"
+                      rel="noreferrer"
                       initial={{ opacity: 0, x: 10, filter: "blur(4px)" }}
                       animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
                       exit={{ opacity: 0, x: 6, filter: "blur(4px)" }}

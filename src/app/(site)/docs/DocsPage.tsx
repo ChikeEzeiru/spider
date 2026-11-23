@@ -67,7 +67,7 @@ export default function DocsPage({
         <div className="sticky top-28 flex flex-col gap-6">
           <Toc containerId="docs-article" />
           <div className="-mx-5 flex flex-col gap-2 border-t border-secondary px-5 pt-6 text-sm">
-            <a href={GITHUB_URL} className="text-tertiary transition-colors hover:text-primary">
+            <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="text-tertiary transition-colors hover:text-primary">
               Edit this page on GitHub
             </a>
             {updated ? (

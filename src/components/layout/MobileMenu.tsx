@@ -121,6 +121,8 @@ export default function MobileMenu() {
         <div className="mt-auto grid grid-cols-2 gap-2 px-4 pb-4">
           <Button
             href={GITHUB_URL}
+            target="_blank"
+            rel="noreferrer"
             size="lg"
             color="secondary"
             iconLeading={<Image src="/icons/github.svg" alt="" width={20} height={20} data-icon="leading" />}

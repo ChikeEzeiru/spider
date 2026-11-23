@@ -5,5 +5,6 @@ export const NAV_LINKS = [
   { label: "Docs", href: "/docs" },
 ];
 
-export const GITHUB_URL = "#";
+// Spider is a concept, so GitHub links go to GitHub's homepage.
+export const GITHUB_URL = "https://github.com";
 export const START_BUILDING_URL = "/docs/quickstart";
